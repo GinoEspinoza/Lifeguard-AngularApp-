@@ -1,0 +1,158 @@
+<div class="span">
+  <header class="col-md-6">
+    <h3>List of Tickets</h3>
+  </header>
+</div>
+
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownCompanyList"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownUserList"
+          formControlName="userId"
+          [settings]="userDropdownSettings"
+          (onSelect)="onUserSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownPriorityList"
+          formControlName="priority"
+          [settings]="priorityDropdownSettings"
+          (onSelect)="onPrioritySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Subject, Message" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>User</th>
+        <th>Subject</th>
+        <th>Status</th>
+        <th>Priority</th>
+        <th style="width: 150px">Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ticket of ticketList">
+        <td>{{ticket.user.company.name}}</td>
+        <td>{{ticket.user.name}}</td>
+        <td>{{ticket.subject}}</td>
+        <td>
+          <ng-template #statusTmpl let-ticket="ticket">
+            <div class="btn-group-vertical">
+              <button type="button" class="btn btn-default" (click)="markStatus(1, ticket)">Mark Read</button>
+              <button type="button" class="btn btn-default" (click)="markStatus(0, ticket)">Mark Unread</button>
+              <button type="button" class="btn btn-default" (click)="markStatus(2, ticket)">Archive</button>
+            </div>
+          </ng-template>
+          <button
+           class="btn badge badge-{{getBadgeStatus(ticket)}}"
+           [popover]="statusTmpl"
+           popoverTitle="Change Status"
+           [outsideClick]="true"
+           #pop="bs-popover"
+           [popoverContext]="{ticket: ticket}"
+           (click)="ticket.ref = pop"
+          >{{getStatus(ticket)}}</button>
+        </td>
+        <td>
+          <ng-template #priorityTmpl let-ticket="ticket">
+            <div class="btn-group-vertical w-100">
+              <button type="button" class="btn btn-default" (click)="setPriority(0, ticket)">Low</button>
+              <button type="button" class="btn btn-default" (click)="setPriority(1, ticket)">Medium</button>
+              <button type="button" class="btn btn-default" (click)="setPriority(2, ticket)">High</button>
+            </div>
+          </ng-template>
+          <button
+           class="btn badge badge-{{getBadgePriority(ticket)}}"
+           [popover]="priorityTmpl"
+           popoverTitle="Change Priority"
+           [outsideClick]="true"
+           #pop="bs-popover"
+           [popoverContext]="{ticket: ticket}"
+           (click)="ticket.ref = pop"
+          >{{getPriority(ticket)}}</button>
+        </td>
+        <td>{{ticket.created_at | date}}</td>
+        <td><button class="btn btn-sm btn-info" (click)="showMessage(ticket, ticketModal)">View</button></td>
+      </tr>
+      <tr *ngIf="ticketList.length == 0">
+        <td colspan="7">There are no tickets.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+
+<ng-template #ticketModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{modalRef.ticket.subject}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-4"><small class="badge badge-{{getBadgeStatus(modalRef.ticket)}}">{{getStatus(modalRef.ticket)}}</small></div>
+      <div class="col-md-4"><small class="badge badge-{{getBadgePriority(modalRef.ticket)}}">{{getPriority(modalRef.ticket)}}</small></div>
+      <div class="col-md-4">{{modalRef.ticket.created_at | date}}</div>
+    </div>
+    <hr>
+    <div class="row">
+      <p class="col-md-12">{{modalRef.ticket.message}}</p>
+    </div>
+  </div>
+</ng-template>

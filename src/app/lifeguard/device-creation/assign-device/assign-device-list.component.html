@@ -1,0 +1,84 @@
+<div class="span">
+  <a class="btn btn-info pull-right" routerLink='/lifeguard/company_devices/new'
+  *hasPermission="{permissions: ['Add Assigned Devices']}">Assign Device</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Assigned Devices</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <!-- <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div> -->
+        <div class="col-sm-6">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Model Name, Series, MAC/UUID , Vendor Serial Number, Part No" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="table-responsive mt-10 p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Model Name</th>
+        <th>Series</th>
+        <th>MAC / UUID</th>
+        <th>Vendor Serial Number</th>
+        <th>Part No</th>
+        <th style="width: 155px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let assignDevice of deviceData">
+        <td colspan="7" *ngIf="!assignDevice['company']" class="collapse-header" (click)="showHideData(assignDevice)">
+          <i [className]="assignDevice.collapsed ? 'fa fa-arrow-down' : 'fa fa-arrow-right'"></i>
+          {{assignDevice.heading}} ({{assignDevice.count}})
+        </td>
+
+        <td *ngIf="assignDevice.showData">
+          <i class="fa fa-{{getDeviceIcon(assignDevice.device)}}"></i> &nbsp;{{assignDevice.company.name}}
+        </td>
+        <td *ngIf="assignDevice.showData">{{assignDevice.device.model_name}}</td>
+        <td *ngIf="assignDevice.showData">{{assignDevice.device.series}}</td>
+        <td *ngIf="assignDevice.showData">{{assignDevice.device.mac}}</td>
+        <td *ngIf="assignDevice.showData">{{assignDevice.device.vendor_serial_no}}</td>
+        <td *ngIf="assignDevice.showData">{{assignDevice.device.part_no}}</td>
+        <td *ngIf="assignDevice.showData">
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/company_devices/{{assignDevice.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/company_devices/{{assignDevice.id}}/edit'
+          *hasPermission="{permissions: ['Update Assigned Devices']}">Edit</a>&nbsp;
+          <button class="btn btn-danger btn-sm" [swal]="deleteSwal"
+          *hasPermission="{permissions: ['Delete Assigned Devices']}">Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete assignment of {{assignDevice.device.mac }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteAssignedDevice(assignDevice)">
+          </swal>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

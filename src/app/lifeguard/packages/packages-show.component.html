@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-md-12" *ngIf="package !== undefined">
+    <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Package Details</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover table-bordered">
+            <tbody>
+              <tr>
+                <th style="width: 300px;">Name</th>
+                <td>{{package.name}}</td>    
+              </tr>
+              <tr>
+                <th style="width: 300px;">Office</th>
+                <td>{{package.offices}}</td>    
+              </tr>
+              <tr>
+                <th style="width: 300px;">Locks</th>
+                <td>{{package.locks}}</td>    
+              </tr>
+              <tr>
+                <th style="width: 300px;">Cameras</th>
+                <td>{{package.cameras}}</td>    
+              </tr>
+              <tr>
+                <th style="width: 300px;">Sub User</th>
+                <td>{{package.sub_users}}</td>    
+              </tr>
+              <tr>
+                <th style="width: 300px;">Price</th>
+                <td>{{package.price}}</td>    
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>{{getStatus()}}</td>    
+              </tr>             
+            </tbody>
+          </table>          
+        </div>
+        <div class="card-footer clearfix">
+          <a class="btn btn-primary" routerLink='/lifeguard/subscription/packages/{{package.id}}/edit/' *hasPermission="{permissions: ['Manage Pricing']}">Edit</a>&nbsp;
+          <a class="btn btn-danger" [swal]="deleteSwal" *hasPermission="{permissions: ['Manage Pricing']}">Delete</a>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{package.name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deletePackage(package)">
+          </swal>
+        </div>
+    </div>
+  </div>
+</div>

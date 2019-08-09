@@ -1,0 +1,98 @@
+<div class="span">
+  <a class="btn btn-info pull-right"
+    routerLink='/lifeguard/sub_users/new'
+    *hasPermission="{permissions: ['Manage Sub Users']}">Add Sub User</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Sub Users</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Name, Email, Mobile No, Address" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Mobile Number</th>
+        <th>Status</th>
+        <th style="width: 255px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{user.name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.mobile_no}}</td>
+        <td>{{getStatus(user)}}</td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/sub_users/{{user.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/sub_users/{{user.id}}/edit'>Edit</a>&nbsp;
+          
+          <button class="btn btn-danger btn-sm" [swal]="deleteSwal">Delete</button>&nbsp;
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{user.name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteUser(user)">
+          </swal>
+          <a class="btn btn-success btn-sm" routerLink='/lifeguard/sub_users/{{user.id}}/manage'>Manage</a>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

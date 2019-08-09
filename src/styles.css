@@ -1,0 +1,93 @@
+/* You can add global styles to this file, and also import other style files */
+.capitalize{
+    text-transform: capitalize;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.has-error{
+    color: #c75757;
+    font-size: 14px;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.btn.btn-sm {
+  padding: 5px !important;
+  font-size: 12px !important;
+  line-height: 12px !important;
+}
+
+.switch-large {
+  width: 100px !important;
+}
+
+.switch-large.checked small {
+  left: 60px !important;
+}
+
+.switch .switch-text {
+  font-size: 16px !important;
+}
+.switch .off {
+  right: 4% !important;
+}
+ui-switch .switch.disabled { opacity: 1 !important; }
+
+.ml-10 { margin-left: 10px; }
+.ml-20 { margin-left: 20px; }
+.ml-30 { margin-left: 30px; }
+
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+
+.mr-10 { margin-right: 10px; }
+.mr-20 { margin-right: 20px; }
+.mr-30 { margin-right: 30px; }
+
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-30 { margin-bottom: 30px; }
+
+.pt-10 { padding-top: 10px; }
+.pt-20 { padding-top: 20px; }
+.pt-30 { padding-top: 30px; }
+
+.dropdown-auto-width {
+  position: unset !important;
+}
+.dropdown-auto-width .cuppa-dropdown {
+  position: unset !important;
+}
+.dropdown-auto-width .cuppa-dropdown .dropdown-list {
+  width: auto !important;
+}
+
+.ngx-ip-container {
+  margin: 0px;
+}
+.ngx-ip-theme-material input { height: auto !important; }
+
+.selected-list .c-btn {
+  box-shadow: none !important;
+  padding: 8px 12px !important;
+}
+
+.row.filters-wrapper {
+  margin-top: 10px;
+}
+
+.row.filters-wrapper .dropdown-auto-width, .row.filters-wrapper input[type=text]{
+  margin-bottom: 10px;
+}
+
+.dash-border { border: 1px dashed lightgray; }
+.selected-list .c-btn{
+  height: unset !important;
+}

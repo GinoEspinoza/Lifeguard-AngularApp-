@@ -1,0 +1,41 @@
+<div class="wrapper">
+  <app-navbar></app-navbar>
+  <app-sidebar></app-sidebar>
+
+  <div class="content-wrapper">
+    <!-- <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Starter Page</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Starter Page</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="content">
+      <div class="container-fluid pt-20 pb-3">
+        <ng4-loading-spinner> </ng4-loading-spinner>
+        <app-alert-message></app-alert-message>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+      <a routerLink="/lifeguard/contact-us" *hasPermission="{roles: ['Company User'], operator: 'exact'}">Contact Us</a>
+      <a routerLink="/lifeguard/tickets" *hasPermission="{roles: ['Super Admin', 'System Admin'], operator: 'exact'}">Tickets</a>
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2018 <a href="https://lgsecurities.com">Lifeguard Securities</a>.</strong> All rights reserved.
+  </footer>
+</div>

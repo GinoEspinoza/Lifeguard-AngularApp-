@@ -1,0 +1,139 @@
+<div>
+  <h2 align="center" *ngIf="deviceUser === undefined">Add Device User</h2>
+  <h2 align="center" *ngIf="deviceUser !== undefined">Edit Device User</h2><br>
+  <form [formGroup]="deviceUserForm" form-inline (ngSubmit)="onSubmit(deviceUserForm.value)">
+    <div class="form-group row" *hasPermission="{roles: ['Super Admin', 'System Admin']}">
+      <label class="col-sm-2 col-form-label" for="name">Company</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="dropdownList"
+        formControlName="companyId"
+        [(ngModel)]="selectedItems"
+        [settings]="companyDropdownSettings"
+        (onSelect)="onItemSelectCompany($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">Office</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="officeDropdownList"
+        formControlName="officeId"
+        [(ngModel)]="officeSelectedItems"
+        [settings]="officeDropdownSettings"
+        (onSelect)="onItemSelectOffice($event)"
+        (onDeSelect)="onItemDeSelectOffice($event)"
+          ></angular2-multiselect>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">Zone</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="zoneDropdownList"
+        formControlName="zoneId"
+        [(ngModel)]="zoneSelectedItems"
+        [settings]="zoneDropdownSettings"
+        (onSelect)="onItemSelectZone($event)"
+        (onDeSelect)="onItemDeSelectZone($event)"
+        (onSelectAll)="onItemSelectZone($event)"
+        (onDeSelectAll)="onItemDeSelectZone($event)"
+          ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">Lock</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="lockDropdownList"
+        formControlName="lockId"
+        [(ngModel)]="lockSelectedItems"
+        [settings]="lockDropdownMultiSettings"
+        (onSelect)="onItemSelectLock($event)"
+        (onDeSelect)="onItemDeSelectLock($event)"
+        (onSelectAll)="onItemSelectLock($event)"
+        (onDeSelectAll)="onItemDeSelectLock($event)"
+          ></angular2-multiselect>
+      </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="name">Group</label>
+        <div class="col-sm-10">
+          <angular2-multiselect [data]="groupDropdownList"
+          formControlName="groupId"
+          [(ngModel)]="groupSelectedItems"
+          [settings]="groupDropdownMultiSettings"
+          (onSelect)="onItemSelectGroup($event)"
+          (onDeSelect)="onItemDeSelectGroup($event)"
+          (onSelectAll)="onItemSelectGroup($event)"
+          (onDeSelectAll)="onItemDeSelectGroup($event)"
+            ></angular2-multiselect>
+        </div>
+      </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="deviceUser">Device User Id</label>
+      <div class="col-sm-6">
+        <input type="text" formControlName="deviceUserId" class="form-control" [ngClass]="{ 'is-invalid':f.deviceUserId.dirty && f.deviceUserId.hasError('required') }" placeholder="Device User Id" />
+        <div *ngIf=" f.deviceUserId.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.deviceUserId.dirty && f.deviceUserId.hasError('required')">Device User Id is required.</div>
+        </div>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-info" (click)="generateID()" *ngIf="!deviceUser" type='button'>Generate</button>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="refDeviceUserId">Reference Device User Id</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="refDeviceUserId" class="form-control" [ngClass]="{ 'is-invalid':f.refDeviceUserId.dirty && f.refDeviceUserId.hasError('required') }" placeholder="Reference Device User Id" />
+        <div *ngIf="f.refDeviceUserId.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.refDeviceUserId.dirty && f.refDeviceUserId.hasError('required')">Reference Device User Id is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="deviceUserFName">Device User First Name</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="deviceUserFName" class="form-control" [ngClass]="{ 'is-invalid':f.deviceUserFName.dirty && f.deviceUserFName.hasError('required') }" placeholder="Device User First Name" />
+        <div *ngIf="f.deviceUserFName.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.deviceUserFName.dirty && f.deviceUserFName.hasError('required')">Device User First Name is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="deviceUserLName">Device User Last Name</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="deviceUserLName" class="form-control" [ngClass]="{ 'is-invalid':f.deviceUserLName.dirty && f.deviceUserLName.hasError('required') }" placeholder="Device User Last Name" />
+        <div *ngIf="f.deviceUserLName.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.deviceUserLName.dirty && f.deviceUserLName.hasError('required')">Device User Last Name is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="pin">Pin</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="pin" class="form-control" [ngClass]="{ 'is-invalid':f.pin.dirty && f.pin.hasError('required') }" placeholder="Pin" />
+        <small class="text-muted">
+          Must be unique and 1-6 digit long.
+        </small>
+        <div *ngIf="f.pin.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.pin.dirty && f.pin.hasError('required')">Pin is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="status">Status</label>
+      <div class="col-sm-10">
+        <ui-switch formControlName="status" labelOn="Active" labelOff="Inactive" size="large"></ui-switch>
+
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-2 col-form-div"></div>
+      <div class="col-sm-10">
+        <button [disabled]="deviceUserForm.invalid" class="btn btn-primary" *ngIf="deviceUser!==undefined && deviceUser!==null">Update</button>
+        <button [disabled]="deviceUserForm.invalid" class="btn btn-primary" *ngIf="deviceUser==undefined">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

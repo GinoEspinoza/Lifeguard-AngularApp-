@@ -1,0 +1,45 @@
+<div>
+  <a class="pull-right" href="#" routerLink="/lifeguard/password-update">Change Password</a>
+  <h2>Profile Update</h2>
+  <form class="form-horizontal" [formGroup]="userForm" (ngSubmit)="onSubmit(userForm.value)">
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="name">Name</label>
+      <div class="col-sm-9">
+        <input type="text" formControlName="name" class="form-control"  placeholder="Name" />
+        <div *ngIf="f.name.hasError('required')" class="has-error">Name is required.</div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="email">Email</label>
+      <div class="col-sm-9">
+        <input type="text" formControlName="email" class="form-control"  placeholder="Email" />
+        <div>
+          <div *ngIf="f.email.hasError('required')" class="has-error">Email is required.</div>
+          <div *ngIf="f.email.hasError('pattern')" class="has-error">Invalid Email.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="mobileNo">Mobile Number</label>
+      <div class="col-sm-9">
+        <input type="text" formControlName="mobileNo" class="form-control" placeholder="Mobile Number" />
+        <div>
+          <div *ngIf="f.mobileNo.hasError('pattern')" class="has-error">Invalid Mobile Number.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="address">Address</label>
+      <div class="col-sm-9">
+        <input type="text" formControlName="address" class="form-control"  placeholder="Enter Address" />
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-sm-3 col-form-div"></div>
+      <div class="col-sm-9">
+        <button class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

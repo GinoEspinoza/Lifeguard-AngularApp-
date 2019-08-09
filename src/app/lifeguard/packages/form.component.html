@@ -1,0 +1,72 @@
+<div>
+    <h2 align="center" *ngIf="packageId==undefined">Add Package</h2>
+    <h2 align="center" *ngIf="packageId!==undefined && packageId!==null">Edit Package</h2><br>
+    <div class='form-group row'>
+        <label class="col-sm-2 col-form-label" for="name">Type</label>
+        <div class="col-sm-10">
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioType" [(ngModel)] = "typeModel">
+              <label ngClass="btn-default" ngbButtonLabel *ngFor="let type of typeList">
+                <input type="radio" (click)="onItemSelectType(type)" ngbButton  [value]="type.id"><i class='fa fa-adn nav-icon'></i> {{ type.name }}
+              </label>
+            </div>
+            <div *ngIf="!selectedType" class="invalid-feedback">
+              <div *ngIf="!selectedType">Type is required.</div>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="packageForm" form-inline (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="name">Name</label>
+        <div class="col-sm-10">
+          <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': f.name.dirty && f.name.hasError('required') }" placeholder="Name" />
+          <div *ngIf="f.name.dirty && f.name.hasError('required')" class="invalid-feedback">
+            <div *ngIf="f.name.dirty && f.name.hasError('required')">Name is required.</div>
+          </div>
+        </div>
+      </div>
+      <div class='form-group row'>
+          <label class="col-sm-2 col-form-label" for="name">Offices</label>
+          <div class="col-sm-10">
+            <input type="number" formControlName="offices" class="form-control" placeholder="Office Count" />
+          </div>
+      </div>
+      <div class='form-group row'>
+          <label class="col-sm-2 col-form-label" for="name">Locks</label>
+          <div class="col-sm-10">
+            <input type="number" formControlName="locks" class="form-control" placeholder="Locks Count" />
+          </div>
+      </div>
+      <div class='form-group row'>
+          <label class="col-sm-2 col-form-label" for="name">Cameras</label>
+          <div class="col-sm-10">
+            <input type="number" formControlName="cameras" class="form-control" placeholder="Cameras Count" />
+          </div>
+      </div>
+      <div class='form-group row'>
+          <label class="col-sm-2 col-form-label" for="name">Sub Users</label>
+          <div class="col-sm-10">
+            <input type="number" formControlName="sub_users" class="form-control" placeholder="Sub Users Count" />
+          </div>
+      </div>
+      <div class='form-group row'>
+          <label class="col-sm-2 col-form-label" for="name">Price</label>
+          <div class="col-sm-10">
+            <input type="number" formControlName="price" class="form-control" placeholder="Price" />
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="status">Status</label>
+        <div class="col-sm-10">
+          <ui-switch formControlName="status" labelOn="Active" labelOff="Inactive" size="large"></ui-switch>
+        </div>
+      </div>
+      
+      <div class="form-group row">
+        <div class="col-sm-2 col-form-div"></div>
+        <div class="col-sm-10">
+          <button [disabled]="isInvalidForm()" class="btn btn-primary" *ngIf="packageId!==undefined && packageId!==null">Update</button>
+          <button [disabled]="isInvalidForm()" class="btn btn-primary" *ngIf="packageId==undefined">Submit</button>
+        </div>
+      </div>
+    </form>
+</div>

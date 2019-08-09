@@ -1,0 +1,120 @@
+<div>
+    <h2 align="center" *ngIf="userId!==undefined && userId!==null">Edit Cloud User</h2>
+    <h2 align="center" *ngIf="userId === undefined">Add Cloud User</h2><br>
+    <form [formGroup]="userForm" form-inline (ngSubmit)="onSubmit(userForm.value)">
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="role">Role</label>
+            <div class="col-sm-9" *ngIf="rolesList">
+                <angular2-multiselect [data]="rolesList"
+                [(ngModel)]="selectedRole"
+                [settings]="roleSettings"
+                (onSelect)="onRoleSelect($event)"
+                (onDeSelect)="OnRoleDeSelect($event)" formControlName="role"
+                ></angular2-multiselect>
+            </div>
+        </div>
+        <div class="form-group row" *ngIf="companySelectionRequired">
+            <label class="col-sm-3 col-form-label" for="name">Company</label>
+            <div class="col-sm-9" *ngIf="companyDropdownList">
+                <angular2-multiselect [data]="companyDropdownList"
+                [(ngModel)]="selectedCompany"
+                [settings]="companyDropdownSettings"
+                (onSelect)="onItemSelect($event)"
+                (onDeSelect)="OnItemDeSelect($event)" 
+                formControlName="company"
+                ></angular2-multiselect>
+            </div>
+        </div>
+        <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="name">Name</label>
+                <div class="col-sm-9">
+                    <input type="text" formControlName="name" class="form-control" placeholder="Name" [ngClass]="{ 'is-invalid': f.name.dirty && f.name.hasError('required') }" />
+                    <div *ngIf="f.name.dirty && f.name.hasError('required')" class="invalid-feedback">
+                        <div *ngIf="f.name.dirty && f.name.hasError('required')">Name is required.</div>
+                    </div>
+                </div>
+            </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="email">Email</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="email" class="form-control" placeholder="Email" [ngClass]="{ 'is-invalid': f.email.dirty && f.email.hasError('required') || f.email.hasError('pattern') }" />
+                <div *ngIf="f.email.dirty && f.email.hasError('required') || f.email.hasError('pattern')" class="invalid-feedback">
+                    <div *ngIf="f.email.dirty && f.email.hasError('required')">Email is required.</div>
+                    <div *ngIf="f.email.dirty && f.email.hasError('pattern')">Invalid Email.</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="password">Password</label>
+            <div class="col-sm-9">
+                <input type="password" formControlName="password" class="form-control" reverse="true" placeholder="Password" [ngClass]="{ 'is-invalid': f.password.dirty && f.password.hasError('required') || f.password.hasError('pattern') }" />
+                <div *ngIf="f.password.dirty && f.password.hasError('required') || f.password.hasError('pattern')" class="invalid-feedback">
+                    <div *ngIf="f.password.dirty && f.password.hasError('required')">Password is required.</div>
+                    <div *ngIf="f.password.dirty && f.password.hasError('pattern')">The Password must be at least 8 characters.</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="passwordConfirmation">Password Confirmation</label>
+            <div class="col-sm-9">
+                <input type="password" formControlName="passwordConfirmation" class="form-control" placeholder="Password Confirmation" [ngClass]="{ 'is-invalid': f.passwordConfirmation.dirty && f.passwordConfirmation.errors && !f.passwordConfirmation.errors.compare }" compare="password" />
+                <div *ngIf="f.passwordConfirmation.dirty && f.passwordConfirmation.errors && !f.passwordConfirmation.errors.compare" class="invalid-feedback">
+                    <div *ngIf="f.passwordConfirmation.dirty && f.passwordConfirmation.errors && !f.passwordConfirmation.errors.compare">Password Confirmation should match Password.</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="mobileNo">Mobile Number</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="mobileNo" class="form-control"
+                ng2TelInput
+                (input)="numberChange($event)"
+                [ngClass]="{ 'is-invalid': f.mobileNo.dirty && (f.mobileNo.hasError('required') || f.mobileNo.hasError('invalid') || !phoneValid) }"
+                (hasError)="onPhoneInvalid($event)"
+                (intlTelInputObject)="telInputObject($event)"
+                (ng2TelOutput)="getNumber($event)" />
+                <div [ngClass]="{'d-block': f.mobileNo.invalid || !phoneValid}" class="invalid-feedback">
+                    <div *ngIf="f.mobileNo.dirty && f.mobileNo.hasError('required')">Contact Number is required.</div>
+                    <div *ngIf="f.mobileNo.hasError('invalid') || !phoneValid">Contact Number is invalid.</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label" for="address">Address</label>
+            <div class="col-sm-9">
+                <input type="text" formControlName="address" class="form-control" placeholder="Address" />
+            </div>
+        </div>
+
+        <div class="form-group row" *ngIf="permissionRequired">
+            <label class="col-sm-3 col-form-label" for="permissions">Permissions</label>
+            <div class="col-sm-9" *ngIf="permissionsDropdownList">
+                <angular2-multiselect [data]="permissionsDropdownList"
+                [(ngModel)]="selectedPermissions"
+                [settings]="permissionDropdownSettings"
+                (onSelect)="onPermissionSelect($event)"
+                (onDeSelect)="OnPermissionDeSelect($event)" formControlName="permissions"
+                ></angular2-multiselect>
+            </div>
+        </div>
+        <div class="form-group row" *ngIf="sub_user_required">
+            <label class="col-sm-3 col-form-label" for="address">Sub User Count</label>
+            <div class="col-sm-9">
+                <input type="number" formControlName="sub_users" class="form-control" placeholder="Count" />
+            </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label" for="status">Status</label>
+          <div class="col-sm-9">
+            <ui-switch formControlName="status" labelOn="Active" labelOff="Inactive" size="large"></ui-switch>
+          </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-3 col-form-div"></div>
+            <div class="col-sm-9">
+                <button [disabled]="userForm.invalid || !phoneValid" class="btn btn-primary" *ngIf="userId!==undefined && userId!==null">Update</button>
+                <button [disabled]="userForm.invalid || !phoneValid" class="btn btn-primary" *ngIf="userId==undefined">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

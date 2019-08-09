@@ -1,0 +1,166 @@
+<!--card-->
+<img src="/assets/images/lg-txt-logo.png" class="logo">
+<div class="card col-md-5">
+    <div class="card-header" style="color: #31708f ;background-color: #d9edf7;border-color: #bce8f1;">
+        Sign Up to Lifeguard
+    </div>
+    <div class="card-body">
+        <app-alert-message></app-alert-message>
+        <ng4-loading-spinner [timeout]="40000"> </ng4-loading-spinner>
+        <form [formGroup]="registerForm" form-inline (ngSubmit)="onSubmit()">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="name">Company</label>
+                <div class="col-sm-9" *ngIf="companyDropdownList">
+                    <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioCompany" >
+                        <label ngClass="btn-default" ngbButtonLabel>
+                            <input type="radio" (click)="onNewCompanyOption()" ngbButton value="1"><i class='fa fa-adn nav-icon'></i> New Company
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" *ngIf="existingCompany">
+                <label class="col-sm-3 col-form-label" for="name"></label>
+                <div class="col-sm-9">
+                    <angular2-multiselect [data]="companyDropdownList"
+                    [(ngModel)]="selectedCompany"
+                    [settings]="companyDropdownSettings"
+                    (onSelect)="onItemSelect($event)"
+                    (onDeSelect)="OnItemDeSelect($event)" 
+                    formControlName="company"
+                    ></angular2-multiselect>
+                </div>
+            </div>
+            <div class="form-group row" *ngIf="newCompany">
+                <label class="col-sm-3 col-form-label" for="company_name"></label>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <label class="" for="company_name">Company Name</label>
+                        <div class="">
+                            <input type="text" formControlName="company_name" class="form-control" [ngClass]="{ 'is-invalid':  f.company_name.company_name && f.name.hasError('required') }" placeholder="Name" />
+                            <div *ngIf=" f.company_name.dirty && f.company_name.hasError('required')" class="invalid-feedback">
+                            <div *ngIf="f.company_name.dirty && f.company_name.hasError('required')">Name is required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="name">Channel Name</label>
+                        <div class="">
+                            <input type="text" formControlName="channelName" class="form-control lowercase" id="channelNameField" [ngClass]="{ 'is-invalid':  f.channelName.dirty && f.channelName.hasError('required') }" placeholder="Channel Name" />
+                            <div *ngIf=" f.channelName.dirty && f.channelName.hasError('required')" class="invalid-feedback">
+                            <div *ngIf="f.channelName.dirty && f.channelName.hasError('required')">Channel Name is required.</div>
+                            </div>
+                            <div>
+                            <div *ngIf="f.channelName.dirty && f.channelName.hasError('pattern')" class="has-error">Invalid Channel Name.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="phone">Contact Number</label>
+                        <div class="">
+                            <input ng2TelInput
+                            [ng2TelInputOptions]="{separateDialCode: true, initialCountry: 'us'}"
+                            type="text"
+                            formControlName="company_phone"
+                            class="form-control"
+                            (input)="companyNumberChange($event)"
+                            [ngClass]="{ 'is-invalid':  f.company_phone.dirty && (f.company_phone.hasError('required') || f.company_phone.hasError('invalid') || !companyPhoneValid) }"
+                            (hasError)="onCompanyPhoneInvalid($event)"
+                            (intlTelInputObject)="companyTelInputObject($event)"
+                            (ng2TelOutput)="getCompanyNumber($event)" />
+                            <div [ngClass]="{'d-block': f.company_phone.invalid || !companyPhoneValid}" class="invalid-feedback">
+                            <div *ngIf="f.company_phone.dirty && f.company_phone.hasError('required')">Company Number is required.</div>
+                            <div *ngIf="f.company_phone.hasError('invalid') || !companyPhoneValid">Company Number is invalid.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="email">Contact Email</label>
+                        <div class="">
+                            <input type="text" formControlName="company_email" class="form-control" [ngClass]="{ 'is-invalid': f.company_email.dirty && (f.company_email.hasError('required') || f.company_email.hasError('pattern')) }" placeholder="Contact Email" />
+                            <div *ngIf=" f.company_email.dirty && f.company_email.invalid" class="invalid-feedback">
+                            <div *ngIf="f.company_email.dirty && f.company_email.hasError('required')">Contact Email is required.</div>
+                            <div *ngIf="f.company_email.dirty && f.company_email.hasError('pattern')">Contact Email is invalid.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label" for="billing_address">Billing Address</label>
+                        <div class="">
+                            <input type="text" formControlName="billing_address" class="form-control" [ngClass]="{ 'is-invalid':  f.billing_address.dirty && f.billing_address.hasError('required') }" placeholder="Billing Address" />
+                            <div *ngIf=" f.billing_address.dirty && f.billing_address.hasError('required')" class="invalid-feedback"></div>
+                            <div *ngIf="f.billing_address.dirty && f.billing_address.hasError('required')">Billing Address is required.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="name">Name</label>
+                <div class="col-sm-9">
+                    <input type="text" formControlName="name" class="form-control" placeholder="Name" [ngClass]="{ 'is-invalid': f.name.dirty && f.name.hasError('required') }" />
+                    <div *ngIf="f.name.dirty && f.name.hasError('required')" class="invalid-feedback">
+                        <div *ngIf="f.name.dirty && f.name.hasError('required')">Name is required.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="email">Email</label>
+                <div class="col-sm-9">
+                    <input type="text" formControlName="email" class="form-control" placeholder="Email" [ngClass]="{ 'is-invalid': f.email.dirty && f.email.hasError('required') || f.email.hasError('pattern') }" />
+                    <div *ngIf="f.email.dirty && f.email.hasError('required') || f.email.hasError('pattern')" class="invalid-feedback">
+                        <div *ngIf="f.email.dirty && f.email.hasError('required')">Email is required.</div>
+                        <div *ngIf="f.email.dirty && f.email.hasError('pattern')">Invalid Email.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="password">Password</label>
+                <div class="col-sm-9">
+                    <input type="password" formControlName="password" class="form-control" reverse="true" placeholder="Password" [ngClass]="{ 'is-invalid': f.password.dirty && f.password.hasError('required') || f.password.hasError('pattern') }" />
+                    <div *ngIf="f.password.dirty && f.password.hasError('required') || f.password.hasError('pattern')" class="invalid-feedback">
+                        <div *ngIf="f.password.dirty && f.password.hasError('required')">Password is required.</div>
+                        <div *ngIf="f.password.dirty && f.password.hasError('pattern')">The Password must be at least 8 characters.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="passwordConfirmation">Password Confirmation</label>
+                <div class="col-sm-9">
+                    <input type="password" formControlName="passwordConfirmation" class="form-control" placeholder="Password Confirmation" [ngClass]="{ 'is-invalid': f.passwordConfirmation.dirty && f.passwordConfirmation.errors && !f.passwordConfirmation.errors.compare }" compare="password" />
+                    <div *ngIf="f.passwordConfirmation.dirty && f.passwordConfirmation.errors && !f.passwordConfirmation.errors.compare" class="invalid-feedback">
+                        <div *ngIf="f.passwordConfirmation.dirty && f.passwordConfirmation.errors && !f.passwordConfirmation.errors.compare">Password Confirmation should match Password.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="mobileNo">Mobile Number</label>
+                <div class="col-sm-9">
+                    <input type="text" formControlName="mobileNo" class="form-control"
+                    ng2TelInput
+                    (input)="numberChange($event)"
+                    [ngClass]="{ 'is-invalid': f.mobileNo.dirty && (f.mobileNo.hasError('required') || f.mobileNo.hasError('invalid') || !phoneValid) }"
+                    (hasError)="onPhoneInvalid($event)"
+                    (intlTelInputObject)="telInputObject($event)"
+                    (ng2TelOutput)="getNumber($event)" />
+                    <div [ngClass]="{'d-block': f.mobileNo.invalid || !phoneValid}" class="invalid-feedback">
+                        <div *ngIf="f.mobileNo.dirty && f.mobileNo.hasError('required')">Contact Number is required.</div>
+                        <div *ngIf="f.mobileNo.hasError('invalid') || !phoneValid">Contact Number is invalid.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label" for="address">Address</label>
+                <div class="col-sm-9">
+                    <input type="text" formControlName="address" class="form-control" placeholder="Address" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="" style='text-align:center'>
+                    <button [disabled]="registerForm.invalid" class="btn btn-primary">Sign up</button>&nbsp;&nbsp;
+                </div>
+            </div>
+            <a routerLink="/auth/forgot-password">Forgot Password?</a>&nbsp;&nbsp;
+            Already have an account? <a routerLink="/login">Login</a>
+        </form>
+    </div>
+</div>

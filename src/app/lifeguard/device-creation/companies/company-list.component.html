@@ -1,0 +1,80 @@
+<div class="span">
+  <a class="btn btn-info pull-right" routerLink='/lifeguard/companies/new' *hasPermission="{permissions: ['Add Companies']}">Add Company</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Companies</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-5">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Company Name, Channel Name, Contact Email" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-6">
+      <ngb-pagination [collectionSize]="totalItems"
+       [(page)]="currentPage"
+       [maxSize]="5"
+       (pageChange)="pageChanged($event)"
+       [pageSize]="pageSize"
+       [disabled]="totalItems <= pageSize"
+       class="d-flex justify-content-end"
+       aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Company Name</th>
+        <th>Channel Name</th>
+        <th>Contact Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of companyList">
+        <td>{{item.name}}</td>
+        <td *ngIf="item.channel_name">{{item.channel_name}}</td>
+        <td>{{item.email}}</td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/companies/{{item.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/companies/{{item.id}}/edit'
+          *hasPermission="{permissions: ['Update Companies']}">Edit</a>&nbsp;
+          <button class="btn btn-danger btn-sm" [swal]="deleteSwal"
+          *hasPermission="{permissions: ['Delete Companies']}">Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{item.name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteCompany(item)">
+          </swal>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     (pageChange)="pageChanged($event)"
+     [pageSize]="pageSize"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

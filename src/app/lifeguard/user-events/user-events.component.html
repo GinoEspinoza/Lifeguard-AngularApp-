@@ -1,0 +1,92 @@
+<h3>
+  User Events
+</h3>
+
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+	<div class="row">
+		<div class="col-xs-6 col-12">
+		<div class="row filters-wrapper">
+			<div class="col-sm-3">
+				<input type="text" 
+					formControlName="search_user" 
+					class="form-control" 
+					placeholder="User Name, Email, Mobile No, Address" />
+			</div>
+			<div class="col-sm-2 form-group">
+				<angular2-multiselect
+					formControlName="search_company" 
+					[data]="companyList"
+					[settings]="companyDropdownSettings"
+			  ></angular2-multiselect>
+			</div>
+			<div class="col-sm-2 form-group">
+				<angular2-multiselect
+					formControlName="search_action" 
+					[data]="actionList"
+					[settings]="actionDropdownSettings"
+			  ></angular2-multiselect>
+			</div>
+			<div class="col-sm-2 form-group">
+			  <input type="text"
+			  		formControlName="search_action_date"
+					placeholder="Action date"
+					class="form-control"
+					bsDatepicker>
+			</div>
+			<div class="col-sm-2">
+				<button class="btn btn-primary">Search</button>
+				<button type="button" class="btn btn-warning" style="margin-left:15px;" (click)="onExport()">Export</button>
+			</div>
+		</div>
+		</div>
+	</div>
+</form>
+	
+<div class="row mt-10">
+	<div class="offset-6 col-xs-6 col-6">
+		<ngb-pagination [collectionSize]="totalItems"
+		[(page)]="currentPage"
+		[maxSize]="30"
+		[pageSize]="pageSize"
+		(pageChange)="pageChanged($event)"
+		[disabled]="totalItems <= pageSize"
+		class="d-flex justify-content-end"
+		aria-label="Default pagination"></ngb-pagination>
+	</div>
+</div>
+  
+<div class="table-responsive p-0">
+	<table class="table table-hover table-bordered">
+	  <thead>
+		<tr>
+		  <th>UserName</th>
+		  <th>Company</th>
+		  <th>Email</th>
+		  <th>Action</th>
+		  <th>Time</th>
+		</tr>
+	  </thead>
+	  <tbody>
+		<tr *ngFor="let h of histories">
+		  <td>{{h.user.name}}</td>
+		  <td>{{h.user.company.name}}</td>
+		  <td>{{h.user.email}}</td>
+		  <td>{{getDisplayActionName(h)}}</td>
+		  <td>{{h.event_time}}</td>
+	  	</tr>
+	  </tbody>
+	</table>
+  </div>
+  
+  <div class="row mt-10">
+	<div class="offset-6 col-xs-6 col-6">
+	  <ngb-pagination [collectionSize]="totalItems"
+	   [(page)]="currentPage"
+	   [maxSize]="30"
+	   [pageSize]="pageSize"
+	   (pageChange)="pageChanged($event)"
+	   [disabled]="totalItems <= pageSize"
+	   class="d-flex justify-content-end"
+	   aria-label="Default pagination"></ngb-pagination>
+	</div>
+  </div>

@@ -1,0 +1,45 @@
+.panel-heading {
+    color: #31708f ;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+.card {
+  margin: 0 auto !important;
+  padding: 0;
+}
+
+img.logo {
+  margin: 4% auto;
+  display: block;
+  margin-bottom: 30px;
+}
+.btn.btn-default:not(:disabled):not(.disabled):active, .btn.btn-default:not(:disabled):not(.disabled).active{
+  background-color:#17a2b8;
+  color:white;
+}
+.btn.btn-info:not(:disabled):not(.disabled):active, .btn.btn-info:not(:disabled):not(.disabled).active{
+  background: white;
+  color: #17a2b8;
+}
+.text-align-right{
+  text-align:right;
+}
+.collapse-pane { 
+  background-color: #f7f7f7;
+  color: #525252;
+  padding: 10px;
+  
+  border: 1px solid #888;
+  border-radius: 3px;
+  padding-bottom:0px;
+}
+.collapse-header{
+  cursor:pointer;
+  padding-bottom:10px;
+  font-size: 20px;
+}
+.collapse-body{
+  padding:10px;
+  font-size: 15px;
+  border-top:1px solid #aaa;
+}

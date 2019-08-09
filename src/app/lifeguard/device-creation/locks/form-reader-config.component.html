@@ -1,0 +1,102 @@
+<div>
+  <h2 align="center">Set Lock Reader Configuration</h2><br>
+  <form [formGroup]="readerConfigForm" form-inline (ngSubmit)="onSubmit(readerConfigForm.value)">
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="reader1">Reader 1 Config</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="reader1List"
+        formControlName="reader1"
+        [(ngModel)]="selectedReader1"
+        [settings]="readerDropdownSettings"
+        (onSelect)="onItemSelectReader1($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="reader2">Reader 2 Config</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="reader2List"
+        formControlName="reader2"
+        [(ngModel)]="selectedReader2"
+        [settings]="readerDropdownSettings"
+        (onSelect)="onItemSelectReader2($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="reader3">Reader 3 Config</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="reader3List"
+        formControlName="reader3"
+        [(ngModel)]="selectedReader3"
+        [settings]="readerDropdownSettings"
+        (onSelect)="onItemSelectReader3($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="doorAccessMode">Door Access Mode</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="doorAccessModeList"
+        [(ngModel)]="selectedDoorMode"
+        formControlName="doorAccessMode"
+        [settings]="readerDropdownSettings"
+        (onSelect)="onItemSelectDoorAccessMode($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="doorEntryExitMode">Door Entry Exit Mode</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="doorEntryExitModeList"
+        [(ngModel)]="selectedDoorEntryExitMode"
+        formControlName="doorEntryExitMode"
+        [settings]="readerDropdownSettings"
+        (onSelect)="onItemSelectDoorEntryExitMode($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="readerAccessMode">Reader Access Mode</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="readerAccessModeList"
+        [(ngModel)]="selectedReaderAccessMode"
+        formControlName="readerAccessMode"
+        [settings]="readerDropdownSettings"
+        (onSelect)="onItemSelectReaderAccessMode($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="readerEntryExitMode">Reader Entry Exit Mode</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="readerEntryExitModeList"
+        [(ngModel)]="selectedReaderEntryExitMode"
+        formControlName="readerEntryExitMode"
+        [settings]="readerDropdownSettings"
+        (onSelect)="onItemSelectReaderEntryExitMode($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-sm-2 col-form-div"></div>
+      <div class="col-sm-10">
+        <button class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

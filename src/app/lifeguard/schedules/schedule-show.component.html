@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-md-12" *ngIf="schedule !== undefined">
+    <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Schedule Details</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover table-bordered">
+            <tbody>
+              <tr>
+                  <th style="width: 300px;">Company Name</th>
+                  <td>{{schedule.company.name}}</td>    
+                </tr>
+              <tr>
+                <th style="width: 300px;">Schedule Name</th>
+                <td>{{schedule.name}}</td>
+              </tr>
+              <tr>
+                <th style="width: 300px;">Type</th>
+                <td>{{schedule.type == 0 ? "Week" : "Day"}}</td>
+              </tr>
+              <tr *ngIf="schedule.type == 0">
+                <th>Week Days</th>
+                <td innerHtml="{{getWeekdayLabels(schedule.weekday)}}"></td>    
+              </tr>
+              <tr *ngIf="schedule.type == 0">
+                <th>Start Time</th>
+                <td>{{schedule.start_time}}</td>    
+              </tr>
+              <tr *ngIf="schedule.type == 0">
+                <th>End Time</th>
+                <td>{{schedule.end_time}}</td>    
+              </tr> 
+              <tr *ngIf="schedule.type == 1">
+                <th>Start Day</th>
+                <td>{{schedule.start_day}}</td>    
+              </tr>
+              <tr *ngIf="schedule.type == 1">
+                <th>End Day</th>
+                <td>{{schedule.end_day}}</td>    
+              </tr>
+              <tr *ngIf="schedule.type == 1">
+                <th>Repeat</th>
+                <td>{{schedule.repeat == 1?'True':'False'}}</td>    
+              </tr> 
+              <tr>
+                <th>Status</th>
+                <td>{{getStatus()}}</td>    
+              </tr>             
+            </tbody>
+          </table>          
+        </div>
+        <div class="card-footer clearfix">
+          <a class="btn btn-primary" routerLink='/lifeguard/schedules/{{schedule.id}}/edit/' *hasPermission="{permissions: ['Update Schedules']}">Edit</a>&nbsp;
+          <a class="btn btn-danger" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Schedules']}">Delete</a>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{schedule.name }}?This will remove all the users from the schedule"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteSchedule(schedule)">
+          </swal>
+        </div>
+    </div>
+  </div>
+</div>

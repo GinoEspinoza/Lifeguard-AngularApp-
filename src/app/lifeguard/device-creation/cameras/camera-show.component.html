@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" *ngIf="camera !== undefined">
+        <div class="card-header">
+          <h3 class="card-title">Camera Details</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover table-bordered">
+            <tbody>
+              <tr>
+                <th style="width: 300px;">Camera Name</th>
+                <td><span *ngIf="camera.device_name">{{camera.device_name}}</span></td>
+              </tr>
+              <tr>
+                <th>Model Name</th>
+                <td *ngIf="camera.company_device.device">{{camera.company_device.device.model_name}}</td>
+              </tr>
+              <tr>
+                <th>Series</th>
+                <td *ngIf="camera.company_device.device">{{camera.company_device.device.series}}</td>
+              </tr>
+              <tr>
+                <th>MAC</th>
+                <td *ngIf="camera.company_device.device">{{camera.company_device.device.mac}}</td>
+              </tr>
+              <tr>
+                <th>Vendor Serial Number</th>
+                <td *ngIf="camera.company_device.device">{{camera.company_device.device.vendor_serial_no}}</td>
+              </tr>
+              <tr>
+                <th>Part Number</th>
+                <td *ngIf="camera.company_device.device" >{{camera.company_device.device.part_no}}</td>
+              </tr>
+              <tr>
+                <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+                <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{camera.company.name}}</td>
+              </tr>
+              <tr>
+                <th>Office Name</th>
+                <td *ngIf="camera.office">{{camera.office.name}}</td>
+              </tr>
+              <tr>
+                <th>Office Address</th>
+                <td *ngIf="camera.office">{{camera.office.address}}</td>
+              </tr>
+              <tr>
+                <th>Zone</th>
+                <td *ngIf="camera.zone">{{camera.zone.name}}</td>
+              </tr>
+              <tr>
+                <th>Subscription</th>
+                <td>
+                  <strong>Status:</strong> &nbsp; {{camera.subscription_status == 1 ? 'On' : 'Off'}}<br>
+                  <strong>Start Date:</strong> &nbsp; {{dateToLocal(camera.subscription_start) | date : format : mediumDate}}<br>
+                  <strong>End Date:</strong> &nbsp; {{dateToLocal(camera.subscription_end) | date : format : mediumDate}}<br>
+                  <strong>Days Remaining:</strong> &nbsp; {{expiresIn()}}
+                </td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>
+                  <ui-switch [(ngModel)]="camera.status" (change)="setStatus($event)" labelOn="Active" labelOff="Inactive" size="large"></ui-switch>
+                </td>
+              </tr>
+            </tbody>
+          </table>          
+        </div>
+        <div class="card-footer clearfix">
+          <a class="btn btn-primary" routerLink='/lifeguard/cameras/{{camera.id}}/edit' *hasPermission="{permissions: ['Update Cameras']}">Edit</a>&nbsp;
+          <button class="btn btn-danger" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Cameras']}">Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{camera.device_name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteCamera(camera)">
+          </swal>
+          <span *hasPermission="{roles: ['Company User'], operator: 'exact'}">
+            <a class="btn btn-primary" routerLink='/lifeguard/cameras/{{camera.id}}/update-name' *hasPermission="{permissions: ['Manage Camera']}">Change Name</a>
+          </span>
+        </div>
+    </div>
+  </div>
+</div>

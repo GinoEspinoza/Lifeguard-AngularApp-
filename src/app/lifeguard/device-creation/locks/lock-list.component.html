@@ -1,0 +1,182 @@
+<div class="span">
+  <a class="btn btn-info pull-right"
+  routerLink='/lifeguard/locks/new'
+  *hasPermission="{permissions: ['Add Locks']}">Add Lock</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Locks</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownOfficeList" [(ngModel)]="selectedOfficeItems"
+          formControlName="officeId"
+          [settings]="officeDropdownSettings"
+          (onSelect)="onOfficeSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownZoneList" [(ngModel)]="selectedZoneItems"
+          formControlName="zoneId"
+          [settings]="zoneDropdownSettings"
+          (onSelect)="onZoneSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Device MAC, IP, Lock Name" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-md-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+        <th>Office</th>
+        <th>Zone</th>
+        <th>Device</th>
+        <th>IP</th>
+        <th>Lock Name</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Live Status</th>
+        <th style="width: 190px;min-width:100px">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lock of locksList">
+        <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{lock.company.name}}</td>
+        <td>{{lock.office.name}}</td>
+        <td>{{lock.zone.name}}</td>
+        <td>{{lock.company_device.device.mac}}</td>
+        <td>{{lock.ip}}</td>
+        <td>{{lock.device_name}}</td>
+        <td innerHTML="{{getTypeString(lock.type)}}"></td>
+        <td>{{getStatus(lock)}}</td>
+        <td><i class="fa fa-spin {{getStatusIcon(lock)}} nav-icon"></i></td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/locks/{{lock.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/locks/{{lock.id}}/edit' *hasPermission="{permissions: ['Update Locks']}">Edit</a>&nbsp;         
+          <button class="btn btn-danger btn-sm" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Locks']}">Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{lock.device_name }}?"
+            type="question"
+            input="checkbox"
+            inputPlaceholder='Force Delete?'
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteLock($event, lock)">
+          </swal>
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/locks/{{lock.id}}/set_configs' *hasPermission="{permissions: ['Update Locks']}">Set Configs</a>&nbsp;
+          <button class="btn btn-danger btn-sm" [swal]="defaultSwal" *hasPermission="{permissions: ['Update Locks']} && {roles:['Super Admin','System Admin','Company User']}">Set Default</button>
+          <swal
+            #defaultSwal
+            title="Are you sure you want to reset {{lock.device_name }} to default?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="setLockDefault($event, lock)">
+          </swal>
+
+          <button class="btn btn-info btn-sm" *hasPermission="{permissions: ['View Locks']}" (click)="viewScheduleUsers(lock,schedule_content)">Schedule Users</button>&nbsp;
+          <a class="btn btn-warning btn-sm" [swal]="timeSwal" *hasPermission="{permissions: ['Update Locks']}">Reset Time</a>
+          <swal
+            #timeSwal
+            title="Are you sure you want to reset time of {{lock.device_name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="resetTimeLock($event, lock)">
+          </swal>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<ng-template #schedule_content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Schedule Users</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <div class="table-responsive p-0">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>User Name</th>
+              <th>Schedule Name</th>
+              <th>Week Days</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let schedule of scheduleUsers">
+              <td>{{schedule.user?schedule.user.device_user_fname+' '+schedule.user.device_user_lname:""}}</td>
+              <td>{{schedule.schedules?schedule.schedules.name:""}}</td>
+              <td innerHTML="{{schedule.schedules?getWeekdayLabels(schedule.schedules.weekday):''}}">
+              </td>
+              <td>{{schedule.schedules?schedule.schedules.start_time:""}}</td>
+              <td>{{schedule.schedules?schedule.schedules.end_time:""}}</td>
+            </tr>
+            <tr *ngIf = "scheduleUsers == null || scheduleUsers.length == 0">
+              <td colspan = "5">No scheduled users</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>

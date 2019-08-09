@@ -1,0 +1,201 @@
+<!-- <a style="margin:10px" class="btn btn-primary" routerLink='/lifeguard/mttq' *hasPermission="{roles: ['Super Admin', 'System Admin']}">List user</a> -->
+<!-- <a class="btn btn-primary" routerLink='/lifeguard/users/new' *hasPermission="{roles: ['Super Admin', 'System Admin']}">create user</a> -->
+
+<div *ngIf="isSuperUser">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Vendors</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_vendors}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/vendors'>Vendors</a>
+          <a class="pull-right" routerLink='/lifeguard/vendors/new'>Add Vendor</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Inventories</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_devices}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/devices' *hasPermission="{permissions: ['View Devices']}">Inventories</a>
+          <a class="pull-right" routerLink='/lifeguard/devices/new' *hasPermission="{permissions: ['Add Devices']}">Add Inventory</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Companies</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_companies}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/companies' *hasPermission="{permissions: ['View Companies']}">Companies</a>
+          <a class="pull-right" routerLink='/lifeguard/companies/new' *hasPermission="{permissions: ['Add Companies']}">Add Company</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Company Users</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_company_users}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/users'>Users</a>
+          <a class="pull-right" routerLink='/lifeguard/users/new'>Add User</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-30">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Hubs Installed</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_hubs}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/hubs' *hasPermission="{permissions: ['View Hubs']}">Hubs</a>
+          <a class="pull-right" routerLink='/lifeguard/hubs/new' *hasPermission="{permissions: ['Add Hubs']}">Add Hub</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Locks Installed</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_locks}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/locks' *hasPermission="{permissions: ['View Locks']}">Locks</a>
+          <a class="pull-right" routerLink='/lifeguard/locks/new' *hasPermission="{permissions: ['Add Locks']}">Add Lock</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Device Users</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_device_users}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/device-users' *hasPermission="{permissions: ['View Device Users']}">Device Users</a>
+          <a class="pull-right" routerLink='/lifeguard/device-users/new' *hasPermission="{permissions: ['Add Device Users']}">Add Device User</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Tickets</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_tickets}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/tickets'>Tickets</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-30">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Cameras Installed</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_cameras}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/cameras' *hasPermission="{permissions: ['Manage Camera']}">Cameras</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Subscription On</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_subscription_on}}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Subscription Off</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_subscription_off}}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="isCompanyUser">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Offices</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_offices}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/offices' *hasPermission="{permissions: ['View Offices']}">Offices</a>
+          <a class="pull-right" routerLink='/lifeguard/offices/new' *hasPermission="{permissions: ['Add Offices']}">Add Office</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Zones</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_zones}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/zones' *hasPermission="{permissions: ['View Zones']}">Zones</a>
+          <a class="pull-right" routerLink='/lifeguard/zones/new' *hasPermission="{permissions: ['Add Zones']}">Add Zone</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Hubs Installed</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.hubs_installed}} of {{stats.hub_devices_available}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/hubs' *hasPermission="{permissions: ['View Hubs']}">Hubs</a>
+          <a class="pull-right" routerLink='/lifeguard/hubs/new' *hasPermission="{permissions: ['Add Hubs']}">Add Hub</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Locks Installed</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.locks_installed}} of {{stats.lock_devices_available}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/locks' *hasPermission="{permissions: ['View Locks']}">Locks</a>
+          <a class="pull-right" routerLink='/lifeguard/locks/new' *hasPermission="{permissions: ['Add Locks']}">Add Lock</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Device Users</h6>
+          <h3 class="card-subtitle mb-2 text-muted">{{stats.total_device_users}}</h3>
+          <a class="pull-left" routerLink='/lifeguard/device-users' *hasPermission="{permissions: ['View Device Users']}">Device Users</a>
+          <a class="pull-right" routerLink='/lifeguard/device-users/new' *hasPermission="{permissions: ['Add Device Users']}">Add Device User</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="stats.camera_streams">
+    <div #streamItems class="col-4 mb-20" *ngFor="let key of stats.camera_streams; let i=index;">
+      <video id="stream-{{i}}" class="video-js vjs-default-skin" controls data-setup='{"aspectRatio":"16:9", "fluid": true}'>
+        <source [src]="getStreamUrl(key)" type="application/x-mpegURL">
+      </video>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="row mt-30">
+    <div class="col-md-6">
+      <canvas baseChart class="bg-white"
+        [datasets]="barChartData"
+        [labels]="barChartLabels"
+        [options]="barChartOptions"
+        [legend]="barChartLegend"
+        [chartType]="barChartType">
+      </canvas>
+    </div>
+
+    <div class="col-md-6">
+      <canvas baseChart class="bg-white"
+        [datasets]="lineChartData"
+        [labels]="lineChartLabels"
+        [options]="lineChartOptions"
+        [colors]="lineChartColors"
+        [legend]="lineChartLegend"
+        [chartType]="lineChartType">
+      </canvas>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" *ngIf="assignDevice !== undefined">
+        <div class="card-header">
+          <h3 class="card-title">Assigned Device Details</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover table-bordered">
+            <tbody>
+              <tr>
+                <th style="width: 300px;">Company</th>
+                <td><span *ngIf="assignDevice.company">{{assignDevice.company.name}}</span></td>    
+              </tr>
+              <tr>
+                <th>Device Type</th>
+                <td>{{assignDevice.device.type}}</td>    
+              </tr>
+              <tr>
+                <th>Model Name</th>
+                <td><span *ngIf="assignDevice.device">{{assignDevice.device.model_name}}</span></td>      
+              </tr>
+              <tr>
+                <th>Series</th>
+                <td><span *ngIf="assignDevice.device">{{assignDevice.device.series}}</span></td>      
+              </tr>
+              <tr>
+                <th>MAC / UUID</th>
+                <td><span *ngIf="assignDevice.device">{{assignDevice.device.mac}}</span></td>      
+              </tr>
+              <tr>
+                <th>Vendor Serial Number</th>
+                <td><span *ngIf="assignDevice.device">{{assignDevice.device.vendor_serial_no}}</span></td>    
+              </tr>
+              <tr>
+                <th>Part Number</th>
+                <td><span *ngIf="assignDevice.device">{{assignDevice.device.part_no}}</span></td>        
+              </tr>
+            </tbody>
+          </table>          
+        </div>
+        <div class="card-footer clearfix">
+          <a class="btn btn-primary" routerLink='/lifeguard/company_devices/{{assignDevice.id}}/edit' *hasPermission="{permissions: ['Edit Assigned Devices']}">Edit</a>&nbsp;
+          <a class="btn btn-danger" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Assigned Devices']}">Delete</a>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete assignment of {{assignDevice.device.mac }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteAssignDevice(assignDevice)">
+          </swal> 
+        </div>
+    </div>
+  </div>
+</div>

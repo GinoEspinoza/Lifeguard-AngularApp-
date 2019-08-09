@@ -1,0 +1,151 @@
+
+<div class="container" style="margin-left:350px">
+	<div class="row">
+        <div class="col-md-6">
+            <form [formGroup]="basicDEviceConfigurationForm" id="fileForm" role="form" (ngSubmit)="onSubmit(basicDEviceConfigurationForm.value)">
+                <fieldset>
+                    <legend class="text-center"> Basic Device Configuration. 
+                        <span class="req"><br><small> </small></span>
+                    </legend>
+
+                <div class="form-group">
+                    <label for="app"> App </label>
+                    <select required  name="app" id="phone" class="form-control" formControlName="app" > 
+                        <option class="form-control" *ngFor="let obj of app" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Device Name </label>
+                    <input maxlength="30" required type="text" name="name" id="phone" class="form-control phone"  formControlName="name" placeholder="Alphanumeric, Max. 30 characters" />
+                    <div *ngIf="basicDEviceConfigurationForm.controls.name.hasError('maxlength')" class=
+                    "has-error">
+                    You have reached your maximum limit of characters allowed, Max. 30 characters
+                    </div>  
+                    <div *ngIf="basicDEviceConfigurationForm.controls.name.hasError('pattern')" class=
+                    "has-error">
+                        Device name not valid, Please enter only Alphanumeric characters.
+                    </div>  
+                </div>
+
+                <div class="form-group">
+                    <label for="ascCode"> ASC Code </label>
+                    <input required type="text" name="ascCode" id="phone" class="form-control phone" maxlength="28" formControlName="ascCode" placeholder="Numeric, 1-65535 range" />
+                    <div *ngIf="basicDEviceConfigurationForm.controls.ascCode.hasError('max')" class=
+                    "has-error">
+                       out of range.
+                    </div> 
+                    <div *ngIf="basicDEviceConfigurationForm.controls.ascCode.hasError('min')" class=
+                    "has-error">
+                       range.
+                    </div> 
+                </div>
+                
+                <div class="form-group">
+                    <label for="generateInvaildUserEvents"> Generate Invaild User Events</label>
+                    <select required  name="generateInvaildUserEvents" id="phone" class="form-control" formControlName="generateInvaildUserEvents" > 
+                        <option class="form-control" *ngFor="let obj of generateInvaildUserEvents" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select>
+                </div>  
+
+                <div class="form-group">
+                    <label for="generateExitSwitchEvents"> Generate Exit Switch Events</label>
+                    <select required  name="generateExitSwitchEvents" id="phone" class="form-control" formControlName="generateExitSwitchEvents" > 
+                        <option class="form-control" *ngFor="let obj of generateExitSwitchEvents" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="maxFingers"> Max Fingers </label>
+                    <select required  name="maxFingers" id="phone" class="form-control" formControlName="maxFingers" > 
+                        <option class="form-control" *ngFor="let obj of maxFingers" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select> 
+                </div>
+
+                <div class="form-group">
+                    <label for="maxPalm"> Max Palms </label>
+                    <select required  name="maxPalms" id="phone" class="form-control" formControlName="maxPalms" > 
+                        <option class="form-control" *ngFor="let obj of maxPalms" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select>  
+                </div>
+
+                <div class="form-group">
+                    <label for="mifareCustomKeyEnable"> Mifare CustomKey Enable </label>
+                    <select required  name="mifareCustomKeyEnable" id="phone" class="form-control" formControlName="mifareCustomKeyEnable" > 
+                        <option class="form-control" *ngFor="let obj of mifareCustomKeyEnable" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select>  
+                </div>
+
+                <div class="form-group">
+                    <label for="mifareCustomKey"> Mifare Custom Key</label>
+                    <input required type="text" name="mifareCustomKey" id="phone" class="form-control phone" maxlength="28" formControlName="mifareCustomKey" placeholder="Range must be 0 - 255" /> 
+                </div>
+
+                <div class="form-group">
+                    <label for="hidIClassCustomKeyEnable">HID i-class custom key enable </label>
+                    <select required  name="hidIClassCustomKeyEnable" id="phone" class="form-control" formControlName="hidIClassCustomKeyEnable" > 
+                        <option class="form-control" *ngFor="let obj of hidIClassCustomKeyEnable" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select>  
+                </div>
+
+                <div class="form-group">
+                    <label for="hidIClassCustomKey"> HID i-class Custom Key</label>
+                    <input required type="text" name="hidIClassCustomKey" id="phone" class="form-control phone" maxlength="28" formControlName="hidIClassCustomKey" placeholder="Range must be 0 - 255" /> 
+                </div>
+
+                <div class="form-group">
+                    <label for="cardCustomKeyAutoUpdate">Card custom key auto update </label>
+                    <select required  name="cardCustomKeyAutoUpdate" id="phone" class="form-control" formControlName="cardCustomKeyAutoUpdate" > 
+                        <option class="form-control" *ngFor="let obj of cardCustomKeyAutoUpdate" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select> 
+                </div>
+
+                <div class="form-group">
+                    <label for="manualDoorModeSelection"> Manual Door Mode Selection </label>
+                    <select required  name="manualDoorModeSelection" id="phone" class="form-control" formControlName="manualDoorModeSelection" > 
+                        <option class="form-control" *ngFor="let obj of manualDoorModeSelection" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fingerFormat"> Finger Format </label>
+                    <input required type="text" name="fingerFormat" id="phone" class="form-control phone" maxlength="28" formControlName="fingerFormat" placeholder="Range must be 0 - 255" /> 
+                </div>
+
+                <div class="form-group">
+                    <label for="format"> Format </label>
+                    <select required  name="format" id="phone" class="form-control" formControlName="format" > 
+                        <option class="form-control" *ngFor="let obj of format" value={{obj.id}}>
+                            {{obj.value}}
+                        </option>
+                    </select> 
+                </div>
+
+                
+
+                <div class="form-group">
+                    <input class="btn btn-success" type="submit" name="submit_reg" value="Submit">
+                </div>
+                </fieldset>
+            </form><!-- ends register form -->
+
+	</div>
+</div>

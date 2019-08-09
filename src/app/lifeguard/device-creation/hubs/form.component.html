@@ -1,0 +1,85 @@
+<div>
+  <h2 align="center" *ngIf="hub === undefined">Add Hub</h2>
+  <h2 align="center" *ngIf="hub !== undefined">Edit Hub</h2><br>
+  <form [formGroup]="hubForm" form-inline (ngSubmit)="onSubmit(hubForm.value)">
+    <div class="form-group row" *hasPermission="{roles: ['Super Admin', 'System Admin']}">
+      <label class="col-sm-2 col-form-label" for="name">Company</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems"
+        [settings]="companyDropdownSettings"
+        (onSelect)="onItemSelectCompany($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        formControlName="companyId"
+        ></angular2-multiselect>
+
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">Office</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="officeDropdownList" [(ngModel)]="officeSelectedItems"
+          [settings]="officeDropdownSettings"
+          (onSelect)="onItemSelectOffice($event)"
+          (onDeSelect)="onItemDeSelectOffice($event)"
+          formControlName="officeId"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">Device</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="deviceDropdownList" [(ngModel)]="deviceSelectedItems"
+          [settings]="deviceDropdownSettings"
+          (onSelect)="onItemSelectDevice($event)"
+          (onDeSelect)="onItemDeSelectDevice($event)"
+          formControlName="deviceId"
+        ></angular2-multiselect>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="ip">IP</label>
+      <div class="col-sm-4">
+        <ngx-ip name="ip"
+          formControlName="ip"
+          inputValidation="block"
+          separator="."
+          required="required"
+          theme="ngx-ip-theme-material"
+          [highlightInvalidBlocks]="true"
+          mode="ipv4"
+          class="form-control"
+        ></ngx-ip>
+        <div *ngIf="f.ip.dirty && f.ip.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.ip.dirty && f.ip.hasError('required')">IP Address is required.</div>
+        </div>
+        <div>
+          <div *ngIf="f.ip.dirty && f.ip.hasError('pattern')" class="has-error">Invalid IP Address.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="deviceName"> Hub Name</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="deviceName" class="form-control" [ngClass]="{ 'is-invalid':f.deviceName.dirty && f.deviceName.hasError('required') }" placeholder="Hub Name" />
+        <div *ngIf="f.deviceName.dirty && f.deviceName.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.deviceName.dirty && f.deviceName.hasError('required')">Hub Name is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="status">Status</label>
+      <div class="col-sm-10">
+        <ui-switch formControlName="status" labelOn="Active" labelOff="Inactive" size="large"></ui-switch>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-2 col-form-div"></div>
+      <div class="col-sm-10">
+        <button [disabled]="isFormInvalid()" class="btn btn-primary" *ngIf="hub!==undefined && hub!==null">Update</button>
+        <button [disabled]="isFormInvalid()" class="btn btn-primary" *ngIf="hub==undefined">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

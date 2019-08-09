@@ -1,0 +1,102 @@
+<div class="span">
+  <a class="btn btn-info pull-right" routerLink='/lifeguard/device-users/new' *hasPermission="{permissions: ['Add Device Users']}">Add Device User</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Device Users</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width" *hasPermission="{roles: ['Super Admin', 'System Admin']}">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search User Id, Ref. User Id, Name, Pin" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-md-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>User Id</th>
+        <th>Ref. User Id</th>
+        <th>Name</th>
+        <th>Pin</th>
+        <th>Locks Enrolled</th>
+        <th>Status</th>
+        <th style="width: 200px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let deviceUser of deviceUsersList">
+        <td>{{deviceUser.company.name}}</td>
+        <td>{{deviceUser.device_user_id}}</td>
+        <td>{{deviceUser.ref_device_user_id}}</td>
+        <td>{{deviceUser.device_user_fname}} {{deviceUser.device_user_lname}}</td>
+        <td>{{deviceUser.pin}}</td>
+        <td>{{totalEnrolled(deviceUser.locks)}}/{{deviceUser.locks.length}}</td>
+        <td>{{deviceUser.status == 1 ? 'Active' : 'Inactive'}}</td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/device-users/{{deviceUser.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/device-users/{{deviceUser.id}}/edit' *hasPermission="{permissions: ['Update Device Users']}">Edit</a>&nbsp;
+          <span *ngIf="deviceUser.locks[0]"><a class="btn btn-primary btn-sm" routerLink='/lifeguard/device-users/{{deviceUser.id}}/enroll'
+           *hasPermission="{permissions: ['Enroll Device Users']}">Enroll</a>&nbsp;</span>
+          <button class="btn btn-danger btn-sm" *hasPermission="{permissions: ['Delete Device Users']}" [swal]="deleteSwal" >Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{deviceUser.device_user_fname}} {{deviceUser.device_user_lname}}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteDeviceUser(deviceUser)">
+          </swal>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row mt-10">
+  <div class="offset-md-6 col-xs-6 col-md-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

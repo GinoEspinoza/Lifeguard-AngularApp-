@@ -1,0 +1,136 @@
+<div class="span">
+  <a class="btn btn-info pull-right"
+  routerLink='/lifeguard/hubs/new'
+  *hasPermission="{permissions: ['Add Hubs']}">Add Hub</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Hubs</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width" *hasPermission="{roles: ['Super Admin', 'System Admin']}">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownOfficeList" [(ngModel)]="selectedOfficeItems"
+          formControlName="officeId"
+          [settings]="officeDropdownSettings"
+          (onSelect)="onOfficeSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Device MAC, IP, Hub Name" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-md-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+        <th>Office</th>
+        <th>Device</th>
+        <th>IP</th>
+        <th>Hub Name</th>
+        <th>Status</th>
+        <th>Live Status</th>
+        <th style="width: 197px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let hub of hubsList">
+        <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{hub.company.name}}</td>
+        <td>{{hub.office.name}}</td>
+        <td>{{hub.company_device.device.mac}}</td>
+        <td>{{hub.ip}}</td>
+        <td>{{hub.device_name}}</td>
+        <td>{{getSimpleStatus(hub)}}</td>
+        <td><i class="fa fa-spin {{getStatusIcon(hub)}} nav-icon"></i></td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/hubs/{{hub.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/hubs/{{hub.id}}/edit' *hasPermission="{permissions: ['Update Hubs']}">Edit</a>&nbsp;
+          <button class="btn btn-danger btn-sm" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Hubs']}">Delete</button>&nbsp;
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{hub.device_name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteHub(hub)">
+          </swal>
+          <button class="btn btn-sm"
+           *hasPermission="{roles: ['Super Admin']}"
+           [swal]="{ confirmButtonText: 'Yes', title: 'Are you sure you want to change the maintainance mode?', showCancelButton: true }"
+           (confirm)="manageHUB(hub, 'MaintainanceMode')"
+           [class.btn-primary]="!hub.maintainance_mode"
+           [class.btn-warning]="hub.maintainance_mode"
+          >{{hub.maintainance_mode ? 'Stop' : 'Start'}} Maintainance</button>&nbsp;
+          <button class="btn btn-sm btn-info"
+           *hasPermission="{roles: ['Super Admin']}"
+           [swal]="{ confirmButtonText: 'Yes', title: 'Are you sure you want to Upgrade this HUB?', showCancelButton: true }"
+           (confirm)="manageHUB(hub, 'update')"
+          >Upgrade</button>&nbsp;
+          <button class="btn btn-sm btn-info"
+           *hasPermission="{roles: ['Super Admin']}"
+           [swal]="{ confirmButtonText: 'Yes', title: 'Are you sure you want to restart mqtt service in this HUB?', showCancelButton: true }"
+           (confirm)="manageHUB(hub, 'restartmqtt')"
+          >MQTT Restart</button>&nbsp;
+          <button class="btn btn-sm btn-info"
+           *hasPermission="{roles: ['Super Admin']}"
+           [swal]="{ confirmButtonText: 'Yes', title: 'Are you sure you want to restart this HUB?', showCancelButton: true }"
+           (confirm)="manageHUB(hub, 'hubrestart')"
+          >HUB Restart</button>
+          <button class="btn btn-sm btn-warning"
+           *hasPermission="{roles: ['Super Admin']}"
+           [swal]="{ confirmButtonText: 'Yes', title: 'Are you sure you want to update the source code of this HUB?', showCancelButton: true }"
+           (confirm)="manageHUB(hub, 'updatesource')"
+          >Update Source</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row mt-10">
+  <div class="offset-md-6 col-xs-6 col-md-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

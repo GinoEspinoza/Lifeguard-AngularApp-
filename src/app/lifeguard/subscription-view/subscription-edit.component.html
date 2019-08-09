@@ -1,0 +1,163 @@
+<div class="card col-md-8">
+    <div class="card-header" style="color: #31708f ;background-color: #d9edf7;border-color: #bce8f1;">
+        Choose your Lifeguard Plan. Once submit we will cancel the current subscription.
+    </div>
+    <div class="card-body">
+        <ng4-loading-spinner [timeout]="40000"> </ng4-loading-spinner>
+        <h5><label class='badge badge-info'>Step 1</label>&nbsp;&nbsp;<strong>Select a plan that works for you:</strong></h5>
+        <hr>
+        <div class="plan-body">
+            <div class='form-group row'>
+                <label class="col-sm-2 col-form-label" for="name">Plan Type: </label>
+                <div class="col-sm-8">
+                    <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioType" [(ngModel)] = "typeModel">
+                        <label ngClass="btn-default" ngbButtonLabel *ngFor="let type of typeList">
+                        <input type="radio" (click)="onItemSelectType(type)" ngbButton  [value]="type.id"><i class='fa fa-adn nav-icon'></i> {{ type.name }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="name">Packages</label>
+                <div class="col-sm-8">
+                    <angular2-multiselect [data]="packageDropdownList"
+                    [(ngModel)]="selectedPackage"
+                    [settings]="packagesDropdownSettings"
+                    (onSelect)="onItemSelect($event)"
+                    (onDeSelect)="OnItemDeSelect($event)"
+                    ></angular2-multiselect>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-8">
+                    <div class='alert alert-info'>
+                        Package will help you to get the pre-selected licenses.We are happy to save your money.<br>
+                        If you do not want the packages, you can have your own licenses.
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="subscribeForm" form-inline>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="office">Offices</label>
+                    <div class="col-sm-8">
+                        <input type="text" (change)="updateTotalPrice()" [readonly]="activePackage" formControlName="office" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="office">Locks</label>
+                    <div class="col-sm-8">
+                        <input type="text" (change)="updateTotalPrice()" [readonly]="activePackage"  formControlName="lock" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="office">Cameras</label>
+                    <div class="col-sm-8">
+                        <input type="text" (change)="updateTotalPrice()" [readonly]="activePackage" formControlName="camera" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="office">Sub User</label>
+                    <div class="col-sm-8">
+                        <input type="text" (change)="updateTotalPrice()" [readonly]="activePackage" formControlName="sub_user" class="form-control"  />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-8">
+                        <label class="col-form-label" style='font-size:20px'>Total Price: {{totalPrice}}$</label>&nbsp;
+                        <button class='btn btn-primary' [disabled]="isInvalidSubscribe()" type='button' (click)="proceedPayment()">Proceed Payment</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br>
+        <div [hidden]="!can_checkout">
+            <h5><label class='badge badge-info'>Step 2</label>&nbsp;&nbsp;<strong>Select your preferred method of payment:</strong></h5><hr>
+            <div class='collapse-pane'>
+                <div class="collapse-header" (click)="showHidePane('paypal')">
+                    <i class="fa fa-arrow-right"></i>
+                    PayPal &nbsp;
+                    <img src="/assets/images/paypal.jpg" height="40px" >
+                </div>
+                <div class="collapse-body" [hidden]="!is_paypal">
+                    <p style='font-size:18px'>Continue below to buy a subscription with PayPal.</p>
+                    <p style='font-size:18px'><strong>Order Total:</strong> ${{totalPrice}}</p>
+                    <p *ngIf="isInvalidSubscribe()">Check subscription details</p>
+                    <div id="paypal-button-container"></div>
+                    <img src="/assets/images/lock.png" height="20px" > Secure checkout. You’re 100% covered by our 30-day money-back guarantee.
+                </div>
+            </div>
+            <br>
+            <div class='collapse-pane'>
+                <div class="collapse-header" (click)="showHidePane('credit')">
+                    <i class="fa fa-arrow-right"></i>
+                    Credit Card &nbsp;
+                    <img src="/assets/images/credit.png" height="40px" >
+                </div>
+                <div class="collapse-body" [hidden]="!is_credit">
+                    <p style='font-size:18px'>YOUR CREDIT CARD DETAILS</p>
+
+                    <p style='font-size:18px'><strong>Order Total:</strong> ${{totalPrice}}</p>
+
+                    <div class='credit-form'>
+                        <form [formGroup]="creditForm" form-inline>
+                            <div class='form-group row'>
+                                <div class='col-sm-6'>
+                                    Name on Card:
+                                    <input type="text" formControlName='card_name' class='form-control' />
+                                </div>
+                                <div class='col-sm-6'>
+                                    Credit Card Number:
+                                    <input type="text" formControlName='card_number' forte-data="card_number" class='form-control' />
+                                </div>
+                            </div>
+                            <div class='form-group row'>
+                                <div class='col-sm-4'>
+                                    Exp month:
+                                    <select forte-data="expire_month" formControlName='expire_month' class='form-control'>
+                                        <option value="1">Jan - 1</option>
+                                        <option value="2">Feb - 2</option>
+                                        <option value="3">Mar - 3</option>
+                                        <option value="4">Apr - 4</option>
+                                        <option value="5">May - 5</option>
+                                        <option value="6">Jun - 6</option>
+                                        <option value="7">Jul - 7</option>
+                                        <option value="8">Aug - 8</option>
+                                        <option value="9">Sep - 9</option>
+                                        <option value="10">Oct - 10</option>
+                                        <option value="11">Nov - 11</option>
+                                        <option value="12">Dec - 12</option>
+                                    </select>
+                                </div>
+                                <div class='col-sm-4'>
+                                    Exp Year:
+                                    <select forte-data="expire_year" formControlName='expire_year' class='form-control'>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                    </select>
+                                </div>
+                                <div class='col-sm-4'>
+                                    CVV:
+                                    <input type="text" forte-data="cvv" formControlName='cvv' class='form-control'/>
+                                </div>
+                            </div>
+                            <label *ngIf="credit_error != ''" style='color:red'>{{credit_error}}</label><br>
+                            <button [disabled]="isInvalidCredit()" class="btn btn-primary" type="submit" forte-api-login-id="forte_api_id" forte-callback-success="onTokenCreated" forte-callback-error="onTokenFailed" type='button' (click)="creditSubscribe()">Subscribe now</button>
+                        </form>
+                    </div>
+                    <br><br>
+                    <img src="/assets/images/lock.png" height="20px" > Secure checkout. You’re 100% covered by our 30-day money-back guarantee.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

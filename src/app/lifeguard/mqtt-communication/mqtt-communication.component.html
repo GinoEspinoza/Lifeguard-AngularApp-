@@ -1,0 +1,109 @@
+<div>
+  <h2>MQTT</h2>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="name">Company</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems"
+      [settings]="companyDropdownSettings"
+      (onSelect)="onItemSelectCompany($event)"
+      (onDeSelect)="OnItemDeSelect($event)"
+      ></angular2-multiselect>
+
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="name">Office</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="officeDropdownList" [(ngModel)]="officeSelectedItems"
+      [settings]="officeDropdownSettings"
+      (onSelect)="onItemSelectOffice($event)"
+      (onDeSelect)="OnItemDeSelectOffice($event)"
+        ></angular2-multiselect>
+
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="name">Zone</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="zoneDropdownList" [(ngModel)]="zoneSelectedItems"
+      [settings]="zoneDropdownSettings"
+      (onSelect)="onItemSelectZone($event)"
+      (onDeSelect)="OnItemDeSelectZone($event)"
+        ></angular2-multiselect>
+
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="name">Device</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="deviceDropdownList" [(ngModel)]="deviceSelectedItems"
+      [settings]="deviceDropdownSettings"
+      (onSelect)="onItemSelectDevice($event)"
+      (onDeSelect)="OnItemDeSelectDevice($event)"
+        ></angular2-multiselect>
+
+    </div>
+  </div>
+
+  <form [formGroup]="mqttForm" >
+      <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="userId">User Id</label>
+          <div class="col-sm-10">
+            <input type="text" formControlName="userId" class="form-control" [ngClass]="{ 'is-invalid': f.userId.dirty && f.userId.hasError('required') }"  placeholder="Enter user id"/>
+            <div *ngIf="f.userId.dirty && f.userId.hasError('required')" class="invalid-feedback">
+                <div *ngIf="f.userId.hasError('required')">User Id is required</div>
+            </div>
+          </div>
+      </div>
+  </form>
+  <div >
+    <div class="form-group row">
+      <div class="col-sm-2 col-form-div"></div>
+      <div class="col-sm-10">
+        <button class="btn btn-primary" (click)="onSubmit(mqttForm.value)" [disabled]='isFormInvalid()'>Submit</button>
+      </div>
+      <!-- <a [routerLink]="['/register']" class="btn btn-link">Register</a> -->
+    </div>
+  </div>
+  <div *ngIf="mqttData == false">
+    No Data found
+  </div>
+  <table *ngIf="mqttData && hasData" class="table table-dark table-striped">
+    <thead>
+      <tr>
+        <th>User Id</th>
+        <th>User Index</th>
+        <th>Ref user id</th>
+        <th>Name</th>
+        <th>User active</th>
+        <th>Vip</th>
+        <th>Validity enable</th>
+        <th>Date</th>
+        <th>User Pin</th>
+        <th>By pass finger</th>
+        <th>card1</th>
+        <th>card2</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{mqttData['user-id']}}</td>
+        <td>{{mqttData['user-index']}}</td>
+        <td>{{mqttData['ref-user-id']}}</td>
+        <td>{{mqttData['name']}}</td>
+        <td>{{mqttData['user-active']}}</td>
+        <td>{{mqttData['vip']}}</td>
+        <td>{{mqttData['validity-enable']}}</td>
+        <td>{{mqttData['validity-date-dd']}}-{{mqttData['validity-date-mm']}}-{{mqttData['validity-date-yyyy']}}</td>
+        <td>{{mqttData['user-pin']}}</td>
+        <td>{{mqttData['by-pass-finger']}}</td>
+        <td>{{mqttData['card1']}}</td>
+        <td>{{mqttData['card2']}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

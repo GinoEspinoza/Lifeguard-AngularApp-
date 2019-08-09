@@ -1,0 +1,91 @@
+<div class="span">
+
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Subscriptions</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Name, Email, Mobile No, Address" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <ng4-loading-spinner [timeout]="40000"> </ng4-loading-spinner>
+  <div class="offset-6 col-xs-6 col-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Mode</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th style="width: 155px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{user.company.name}}</td>
+        <td>{{user.name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.subscription?user.subscription.mode:''}}</td>
+        <td>{{getType(user)}}</td>
+        <td>{{getStatus(user)}}</td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/subscriptions-manage/{{user.id}}'>Show</a>&nbsp;
+          <button *ngIf="user.subscription != null" class="btn btn-danger btn-sm" [swal]="deleteSwal">Cancel</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to cancel the subscription of {{user.name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="cancelSubscription(user)">
+          </swal>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

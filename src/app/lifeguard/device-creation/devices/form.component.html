@@ -1,0 +1,120 @@
+<div>
+    <h2 align="center" *ngIf="!device.id">Add Inventory</h2>
+    <h2 align="center" *ngIf="device.id">Edit Inventory</h2><br>
+    <form [formGroup]="deviceForm" form-inline (ngSubmit)="onSubmit(deviceForm.value)">
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="name">Vendor</label>
+        <div class="col-sm-10">
+          <angular2-multiselect [data]="dropdownVendorList"
+          formControlName="vendorId"
+          [(ngModel)]="selectedVendorItems"
+          [settings]="vendorDropdownSettings"
+          (onSelect)="onVendorSelect($event)"
+          (onDeSelect)="OnItemDeSelect($event)"
+          ></angular2-multiselect>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="deviceType">Device Type</label>
+        <div class="col-sm-10">
+          <angular2-multiselect [data]="dropdownDeviceType" [(ngModel)]="selectedDeviceTypes"
+          [settings]="deviceTypeDropdownSettings"
+          (onSelect)="onDeviceTypeSelect($event)"
+          (onDeSelect)="onDeviceTypeDeSelect($event)"
+          formControlName="deviceType"
+          ></angular2-multiselect>
+          <div *ngIf="f.deviceType.dirty && f.deviceType.hasError('required')" class="invalid-feedback">
+            <div *ngIf="f.deviceType.dirty && f.deviceType.hasError('required')">Device Type is required.</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="modelName">Model Name</label>
+        <div class="col-sm-10">
+            <input type="text" formControlName="modelName" class="form-control" placeholder="Model Name" [ngClass]="{ 'is-invalid': f.modelName.dirty && f.modelName.hasError('required') }" />
+            <div *ngIf="f.modelName.dirty && f.modelName.hasError('required')" class="invalid-feedback">
+              <div *ngIf="f.modelName.dirty && f.modelName.hasError('required')">Model Name is required.</div>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="series">Series</label>
+        <div class="col-sm-10">
+            <input type="text" formControlName="series" class="form-control" placeholder="Series" [ngClass]="{ 'is-invalid': f.series.dirty && f.series.hasError('required') }" />
+            <div *ngIf="f.series.dirty && f.series.hasError('required')" class="invalid-feedback">
+              <div *ngIf="f.series.dirty && f.series.hasError('required')">Series is required.</div>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row" *ngIf="(selectedDeviceType == 'lock' || selectedDeviceType == 'hub')">
+        <label class="col-sm-2 col-form-label">MAC</label>
+        <div class="col-sm-5">
+          <ngx-ip
+            name="mac"
+            formControlName="mac"
+            inputValidation="block"
+            separator=":"
+            theme="ngx-ip-theme-material"
+            [highlightInvalidBlocks]="true"
+            mode="mac"
+            [(ngModel)]="device.mac"
+            class="form-control"
+          ></ngx-ip>
+          <div *ngIf="f.mac.dirty && f.mac.hasError('required')" class="invalid-feedback">
+            <div *ngIf="f.mac.dirty && f.mac.hasError('required')">MAC is required.</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row" *ngIf="(selectedDeviceType == 'camera')">
+        <label class="col-sm-2 col-form-label" for="uuid">UUID</label>
+        <div class="col-sm-5">
+          <input type="text" formControlName="uuid" class="form-control" placeholder="UUID" [ngClass]="{ 'is-invalid': f.uuid.dirty && f.uuid.hasError('required') }" />
+          <div *ngIf="f.uuid.dirty && f.uuid.hasError('required')" class="invalid-feedback">
+            <div *ngIf="f.uuid.dirty && f.uuid.hasError('required')">UUID is required.</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="vendorSerialNumber">Vendor Serial Number</label>
+        <div class="col-sm-10">
+            <input type="text" formControlName="vendorSerialNumber" class="form-control" placeholder="Vendor Serial Number" [ngClass]="{ 'is-invalid': f.vendorSerialNumber.dirty && f.vendorSerialNumber.hasError('required') }" />
+            <div *ngIf="f.vendorSerialNumber.dirty && f.vendorSerialNumber.hasError('required')" class="invalid-feedback">
+              <div *ngIf="f.vendorSerialNumber.dirty && f.vendorSerialNumber.hasError('required')">Vendor Serial Number is required.</div>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="partNumber">Part Number</label>
+        <div class="col-sm-10">
+            <input type="text" formControlName="partNumber" class="form-control" placeholder="Part Number" [ngClass]="{ 'is-invalid': f.partNumber.dirty && f.partNumber.hasError('required') }" />
+            <div *ngIf="f.partNumber.dirty && f.partNumber.hasError('required')" class="invalid-feedback">
+              <div *ngIf="f.partNumber.dirty && f.partNumber.hasError('required')">Part Number is required.</div>
+            </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="status">Status</label>
+        <div class="col-sm-10">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" id="status-active" type="radio" name="status" value="1" formControlName="status">
+            <label class="form-check-label" for="status-active">Active</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" id="status-inactive" type="radio" name="status" value="0" formControlName="status">
+            <label class="form-check-label" for="status-inactive">In Active</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" id="status-archieve" type="radio" name="status" value="2" formControlName="status">
+            <label class="form-check-label" for="status-archieve">Archive</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-2 col-form-div"></div>
+        <div class="col-sm-10">
+            <button [disabled]="isInvalid()" class="btn btn-primary"> <span *ngIf="device.id">Update</span> <span *ngIf="!device.id">Submit</span></button>
+        </div>
+      </div>
+    </form>
+    </div>

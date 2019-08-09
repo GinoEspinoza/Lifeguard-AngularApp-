@@ -1,0 +1,132 @@
+<div class="span">
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>Manage Lock and Cameras</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownOfficeList" [(ngModel)]="selectedOfficeItems"
+          formControlName="officeId"
+          [settings]="officeDropdownSettings"
+          (onSelect)="onOfficeSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownZoneList" [(ngModel)]="selectedZoneItems"
+          formControlName="zoneId"
+          [settings]="zoneDropdownSettings"
+          (onSelect)="onZoneSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<hr>
+<h3>Locks</h3>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Office</th>
+        <th>Zone</th>
+        <th>Lock Name</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Assigned</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lock of locksList">
+        <td>{{lock.office.name}}</td>
+        <td>{{lock.zone.name}}</td>
+        <td>{{lock.device_name}}</td>
+        <td innerHTML="{{getTypeString(lock.type)}}"></td>
+        <td>{{getStatus(lock)}}</td>
+        <td><span class='badge badge-info' *ngIf="isLockAssigned(lock)">Assigned</span></td>
+        <td>
+          <button class="btn btn-info btn-sm" (click) = "deviceAssignAction(lock,TYPE_LOCK,ACTION_ASSIGN)" *ngIf="!isLockAssigned(lock)" >Assign&nbsp;</button>
+          <button class="btn btn-danger btn-sm" (click) = "deviceAssignAction(lock,TYPE_LOCK,ACTION_REMOVE)" *ngIf="isLockAssigned(lock)" >Remove</button>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+
+<h3>Cameras</h3>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Office</th>
+        <th>Zone</th>
+        <th>Device</th>
+        <th>Camera Name</th>
+        <th>Status</th>
+        <th>Assigned</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let camera of camerasList">
+        <td>{{camera.office.name}}</td>
+        <td>{{camera.zone.name}}</td>
+        <td>{{camera.company_device.device.mac}}</td>
+        <td>{{camera.device_name}}</td>
+        <td>{{getStatus(camera)}}</td>
+        <td><span class='badge badge-info' *ngIf="isCameraAssigned(camera)">Assigned</span></td>
+        <td>
+          <button class="btn btn-info btn-sm" (click) = "deviceAssignAction(camera,TYPE_CAMERA,ACTION_ASSIGN)" *ngIf="!isCameraAssigned(camera)">Assign&nbsp;</button>
+          <button class="btn btn-danger btn-sm" (click) = "deviceAssignAction(camera,TYPE_CAMERA,ACTION_REMOVE)" *ngIf="isCameraAssigned(camera)">Remove</button>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage_camera"
+     [maxSize]="5"
+     [pageSize]="pageSize_camera"
+     (pageChange)="cameraPageChanged($event)"
+     [disabled]="totalItems_camera <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

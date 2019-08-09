@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" *ngIf="company !== undefined">
+        <div class="card-header">
+          <h3 class="card-title">Company Details</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover table-bordered">
+            <tbody>
+              <tr>
+                <th style="width: 300px;">Name</th>
+                <td>{{company.name}}</td>    
+              </tr>
+              <tr>
+                <th>Channel Name</th>
+                <td *ngIf="company.channel_name">{{company.channel_name}}</td>    
+              </tr>
+              <tr>
+                <th>Contact Number</th>
+                <td>{{company.phone}}</td>    
+              </tr>
+              <tr>
+                <th>Contact Email</th>
+                <td>{{company.email}}</td>      
+              </tr>
+              <tr>
+                <th>Billing Address</th>
+                <td>{{company.billing_address}}</td>      
+              </tr>
+            </tbody>
+          </table>          
+        </div>
+        <div class="card-footer clearfix">
+          <a class="btn btn-primary" routerLink='/lifeguard/companies/{{company.id}}/edit' *hasPermission="{permissions: ['Update Companies']}">Edit</a>&nbsp;
+          <a class="btn btn-danger" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Companies']}">Delete</a>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{company.name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteCompany(company)">
+          </swal>
+        </div>
+    </div>
+  </div>
+</div>

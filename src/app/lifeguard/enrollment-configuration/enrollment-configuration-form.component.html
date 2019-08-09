@@ -1,0 +1,117 @@
+<div>
+  <h2 align="center">Enroll Device User</h2><br>
+  <div class="form-group row" *hasPermission="{roles: ['Super Admin', 'System Admin']}">
+    <label class="col-sm-2 col-form-label" for="name">Company</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="companyDropdownList" [(ngModel)]="selectedItems"
+      [settings]="companyDropdownSettings"
+      (onSelect)="onItemSelectCompany($event)"
+      (onDeSelect)="OnItemDeSelect($event)"
+      ></angular2-multiselect>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="name">Office</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="officeDropdownList" [(ngModel)]="officeSelectedItems"
+      [settings]="officeDropdownSettings"
+      (onSelect)="onItemSelectOffice($event)"
+      (onDeSelect)="onItemDeSelectOffice($event)"
+        ></angular2-multiselect>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="name">Zone</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="zoneDropdownList" [(ngModel)]="zoneSelectedItems"
+      [settings]="zoneDropdownSettings"
+      (onSelect)="onItemSelectZone($event)"
+      (onDeSelect)="onItemDeSelectZone($event)"
+        ></angular2-multiselect>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="name">Device Lock</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="deviceDropdownList" [(ngModel)]="deviceSelectedItems"
+      [settings]="deviceDropdownSettings"
+      (onSelect)="onItemSelectDevice($event)"
+      (onDeSelect)="onItemDeSelectDevice($event)"
+        ></angular2-multiselect>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label" for="name">Enroll Mode</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="enrollModes" [(ngModel)]="enrollSelectedMode"
+      [settings]="enrollModeDropdownSettings"
+      (onSelect)="onItemSelectEnrollMode($event)"
+      (onDeSelect)="onItemDeSelectEnrollMode($event)"
+        ></angular2-multiselect>
+    </div>
+  </div>
+  <div class="form-group row" *ngIf="selectedEnrollMode == 1">
+    <label class="col-sm-2 col-form-label" for="enrollLocksEnroll">Enrollment Device</label>
+    <div class="col-sm-10">
+      <angular2-multiselect [data]="enrollDeviceDropdownList" [(ngModel)]="enrollDeviceSelectedItems"
+      [settings]="enrollDeviceDropdownSettings"
+      (onSelect)="onItemSelectEnrollDevice($event)"
+      (onDeSelect)="onItemDeSelectEnrollDevice($event)"
+        ></angular2-multiselect>
+    </div>
+  </div>
+  <div class="form-group row" *ngIf="selectedEnrollMode == 1">
+    <div class="col-sm-2 col-form-div"></div>
+    <div class="col-sm-10">
+      <button [disabled]="selectedEnrollDevice == undefined || selectedEnrollDevice == null || !deviceUserId" class="btn btn-warning" (click)="getCardNumber()" type='button'>Get Card Number</button>
+    </div>
+  </div>
+  <form [formGroup]="enrollUserForm" form-inline (ngSubmit)="onSubmit(enrollUserForm.value)">
+    <div class="form-group row" *ngIf="selectedEnrollMode == 1">
+      <label class="col-sm-2 col-form-label" for="smartCardNumber"> Smart Card Number</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="smartCardNumber" class="form-control" placeholder="Smart Card Number" />
+      </div>
+    </div>
+
+    <div class="form-group row" *ngIf="fingerCountVisible">
+      <label class="col-sm-2 col-form-label" for="name">Enroll Finger Count</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="enrollFingerCounts"
+        [(ngModel)]="enrollFingerNumberSelected"
+        [ngModelOptions]="{standalone: true}"
+        [settings]="enrollFingerDropdownSettings"
+        (onSelect)="onItemSelectEnrollFinger($event)"
+        (onDeSelect)="onItemDeSelectEnrollFinger($event)"
+          ></angular2-multiselect>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="userName">Device User Name</label>
+      <div class="col-sm-10">
+        <input type="text"
+          [(ngModel)]="employeeName"
+          formControlName="userName"
+          class="form-control" [ngClass]="{ 'is-invalid':f.userName.dirty && f.userName.hasError('required') }"
+          [typeahead]="dataSource"
+          typeaheadOptionField="device_user_name"
+          typeaheadWaitMs="1000"
+          (typeaheadNoResults)="userNameNoResults($event)"
+          (typeaheadOnSelect)="userNameOnSelect($event)"
+          placeholder="Device User Name"/>
+        <div *ngIf="userNamenoResult" class="has-error">
+          User not found.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-sm-2 col-form-div"></div>
+      <div class="col-sm-10">
+        <button [disabled]="isFormInvalid()" class="btn btn-primary" *ngIf="enrollUserForm!==undefined && enrollUserForm!==null">Update</button>
+        <button [disabled]="isFormInvalid()" class="btn btn-primary" *ngIf="enrollUserForm==undefined">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

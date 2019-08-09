@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" *ngIf="zone !== undefined">
+        <div class="card-header">
+          <h3 class="card-title">Zone Details</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover table-bordered">
+            <tbody>
+              <tr *hasPermission="{roles: ['Super Admin', 'System Admin']}">
+                <th style="width: 300px;">Company</th>
+                <td>{{zone.company.name}}</td>    
+              </tr>
+              <tr>
+                <th>Office</th>
+                <td>{{zone.office.name}}</td>    
+              </tr>
+              <tr>
+                <th>Name</th>
+                <td>{{zone.name}}</td> 
+              </tr>
+            </tbody>
+          </table>          
+        </div>
+        <div class="card-footer clearfix">
+          <a class="btn btn-primary" routerLink='/lifeguard/zones/{{zone.id}}/edit' *hasPermission="{permissions: ['Update Zones']}">Edit</a>&nbsp;
+          <a class="btn btn-danger"  [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Zones']}">Delete</a>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{zone.name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteZone(zone)">
+          </swal>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="span">
+  <a class="btn btn-info pull-right" routerLink='/lifeguard/offices/new' *hasPermission="{permissions: ['Add Offices']}">Add Office</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Offices</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width" *hasPermission="{roles: ['Super Admin', 'System Admin']}">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <!-- <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div> -->
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Office Name, Address" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+        <th>Office Name</th>
+        <th>Address</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of officeList">
+        <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{item.company.name}}</td>
+        <td>{{item.name}}</td>
+        <td title="{{item.address}}" maxlength="20" style="width:200px; word-wrap:break-word;overflow:hidden">{{item.address}}</td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/offices/{{item.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/offices/{{item.id}}/edit' *hasPermission="{permissions: ['Update Offices']}">Edit</a>&nbsp;
+          <button class="btn btn-danger btn-sm"  [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Offices']}">Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{item.name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteOffice(item)">
+          </swal>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

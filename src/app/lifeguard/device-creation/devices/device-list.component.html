@@ -1,0 +1,118 @@
+<div class="span">
+  <a class="btn btn-info pull-right" routerLink='/lifeguard/devices/new' *hasPermission="{permissions: ['Add Inventories']}">Add Inventory</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Inventories</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownDeviceTypeList"
+          formControlName="deviceType"
+          [settings]="deviceTypeDropdownSettings"
+          (onSelect)="onDeviceTypeSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownVendorList" [(ngModel)]="selectedVendorItems"
+          [ngModelOptions]="{standalone: true}"
+          [settings]="vendorDropdownSettings"
+          (onSelect)="onVendorSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search ModelName, Series, MAC, VSN, PartNo" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     (pageChange)="pageChanged($event)"
+     [pageSize]="pageSize"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Vendor</th>
+        <th>Assigned To</th>
+        <th>Model Name</th>
+        <th>Series</th>
+        <th>MAC / UUID</th>
+        <th>Vendor Serial No.</th>
+        <th>Part No.</th>
+        <th>Status</th>
+        <th style="width: 155px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let device of deviceList">
+        <td><i class="fa fa-{{getDeviceIcon(device)}}"></i></td>
+        <td>{{device.vendor.name}}</td>
+        <td>{{getAssignedCompany(device)}}</td>
+        <td>{{device.model_name}}</td>
+        <td>{{device.series}}</td>
+        <td>{{device.mac}}</td>
+        <td>{{device.vendor_serial_no}}</td>
+        <td>{{device.part_no}}</td>
+        <td>{{getStatus(device)}}</td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/devices/{{device.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/devices/{{device.id}}/edit' *hasPermission="{permissions: ['Update Inventories']}">Edit</a>&nbsp;
+          <button class="btn btn-danger btn-sm" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Inventories']}">Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{device.mac }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteDevice(device)">
+          </swal>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

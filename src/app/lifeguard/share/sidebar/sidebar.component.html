@@ -1,0 +1,178 @@
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <a routerLink="home" class="brand-link text-center">
+    <img src="/assets/images/lg-logo.png">
+    <!-- <span class="brand-text font-weight-light">Lifeguard Admin</span> -->
+  </a>
+
+  <div class="sidebar">
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" role="menu" data-accordion="false">
+        <li class="nav-item">
+          <a routerLink="home" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-fw fa-dashboard nav-icon"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item" *hasPermission="{roles: ['System Admin']}">
+          <a [routerLink]="['/lifeguard/heart_beat']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-fw fa-heartbeat nav-icon"></i>
+            Heart Beat
+          </a>
+        </li>
+        <li class="nav-item" *hasPermission="{roles: ['System Admin']}">
+          <a [routerLink]="['/lifeguard/vendors']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-users nav-icon"></i>
+            Vendors
+          </a>
+        </li>
+        <li class="nav-item" *hasPermission="{permissions: ['View Inventories']}">
+          <a [routerLink]="['/lifeguard/devices']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-hdd-o nav-icon"></i>
+            Inventories
+          </a>
+        </li>
+
+        <li class="nav-item" *hasPermission="{permissions: ['View Companies']}">
+          <a [routerLink]="['/lifeguard/companies']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-adn nav-icon"></i>
+            Companies
+          </a>
+        </li>
+        <li class="nav-item" *hasPermission="{permissions: ['View Cloud Users']}">
+          <a [routerLink]="['/lifeguard/users']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-user nav-icon"></i>
+            Cloud Users
+          </a>
+        </li>
+
+        <li class="nav-item" *hasPermission="{permissions: ['Manage Sub Users'],roles: ['Company User'], operator: 'exact'}">
+          <a [routerLink]="['/lifeguard/sub_users']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-user-circle-o nav-icon"></i>
+            Sub Users
+          </a>
+        </li>
+        
+        <li class="nav-item" *hasPermission="{permissions: ['View Offices']}">
+          <a [routerLink]="['/lifeguard/offices']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-building nav-icon"></i>
+            Offices
+          </a>
+        </li>
+
+        <li class="nav-item" *hasPermission="{permissions: ['View Zones']}">
+          <a [routerLink]="['/lifeguard/zones']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-th-large nav-icon"></i>
+            Zones
+          </a>
+        </li>
+        <li class="nav-item" *hasPermission="{permissions: ['View Schedules']}">
+			<a [routerLink]="['/lifeguard/schedules']" [routerLinkActive]="['active']" class="nav-link">
+				<i class="fa fa-calendar nav-icon"></i>
+				Schedules
+			</a>
+		</li>
+		
+        <li class="nav-item" *hasPermission="{permissions: ['View Assigned Devices']}">
+          <a [routerLink]="['/lifeguard/company_devices']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-tasks nav-icon"></i>
+            Assigned Devices
+          </a>
+        </li>
+		
+        <li class="nav-item has-treeview" [class.menu-open]="showMenu === 'events'"
+        *hasPermission="{permissions: ['View User Events','View Device Events']}">
+          <a (click)="addExpandClass('events')" class="nav-link">
+            <i class="fa fa-etsy nav-icon"></i>
+            Events
+            <i class="right fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="nav nav-treeview" [class.expand]="showMenu === 'events'">
+            <li class="nav-item" *hasPermission="{permissions: ['View User Events']}">
+              <a [routerLink]="['/lifeguard/user-events']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fa fa-user-secret nav-icon"></i>
+                User Events
+              </a>
+            </li>
+
+            <li class="nav-item" *hasPermission="{permissions: ['View Device Events']}">
+              <a [routerLink]="['/lifeguard/events']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fa fa-laptop nav-icon"></i>
+                Device Events
+              </a>
+            </li>
+          </ul>
+        </li>
+		
+        <li class="nav-item" *hasPermission="{permissions: ['View Hubs']}">
+          <a [routerLink]="['/lifeguard/hubs']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-microchip nav-icon"></i>
+            Hubs
+          </a>
+        </li>
+
+        <li class="nav-item" *hasPermission="{permissions: ['View Locks']}">
+          <a [routerLink]="['/lifeguard/locks']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-lock nav-icon"></i>
+            Locks
+          </a>
+        </li>
+
+        <li class="nav-item" *hasPermission="{permissions: ['Manage Camera']}">
+          <a [routerLink]="['/lifeguard/cameras']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-video-camera nav-icon"></i>
+            Cameras
+          </a>
+        </li>
+
+        <li class="nav-item has-treeview" [class.menu-open]="showMenu === 'pages'"
+        *hasPermission="{permissions: ['View Device Users', 'Enroll Device Users','View Groups']}">
+          <a (click)="addExpandClass('pages')" class="nav-link">
+            <i class="fa fa-address-card nav-icon"></i>
+            Employees
+            <i class="right fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="nav nav-treeview" [class.expand]="showMenu === 'pages'">
+            <li class="nav-item" *hasPermission="{permissions: ['View Device Users']}">
+              <a [routerLink]="['/lifeguard/device-users']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fa fa-user-plus nav-icon"></i>
+                Device Users
+              </a>
+            </li>
+            <li class="nav-item" *hasPermission="{permissions: ['View Groups']}">
+              <a [routerLink]="['/lifeguard/groups']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fa fa-object-group nav-icon"></i>
+                User Groups
+              </a>
+            </li>
+            <li class="nav-item" *hasPermission="{permissions: ['Enroll Device Users']}">
+              <a [routerLink]="['/lifeguard/enrollment-configurations/new']" [routerLinkActive]="['active']" class="nav-link">
+                <i class="fa fa-plus nav-icon"></i>
+                Enroll Device User
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item" *hasPermission="{permissions: ['Manage Doors']}">
+          <a [routerLink]="['/lifeguard/door/unlock']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-unlock nav-icon"></i>
+            Manage Doors
+          </a>
+        </li>
+        <li class="nav-item" *hasPermission="{roles: ['Super Admin']}">
+          <a [routerLink]="['/lifeguard/subscription/details']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-th-list nav-icon"></i>
+            Subscription Details
+          </a>
+        </li>
+        <li class="nav-item" *hasPermission="{roles: ['Super Admin']}">
+          <a [routerLink]="['/lifeguard/subscriptions-manage']" [routerLinkActive]="['active']" class="nav-link">
+            <i class="fa fa-server nav-icon"></i>
+            Subscriptions
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

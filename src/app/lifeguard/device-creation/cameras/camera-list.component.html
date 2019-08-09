@@ -1,0 +1,119 @@
+<div class="span">
+  <a class="btn btn-info pull-right"
+  routerLink='/lifeguard/cameras/new'
+  *hasPermission="{permissions: ['Add Cameras']}">Add Camera</a>
+  <div class="row">
+    <header class="col-md-6 col-xs-6">
+      <h3>List of Cameras</h3>
+    </header>
+  </div>
+</div>
+<form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+  <div class="row">
+    <div class="col-xs-6 col-12">
+      <div class="row filters-wrapper">
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+          formControlName="companyId"
+          [settings]="companyDropdownSettings"
+          (onSelect)="onCompanySelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownOfficeList" [(ngModel)]="selectedOfficeItems"
+          formControlName="officeId"
+          [settings]="officeDropdownSettings"
+          (onSelect)="onOfficeSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownZoneList" [(ngModel)]="selectedZoneItems"
+          formControlName="zoneId"
+          [settings]="zoneDropdownSettings"
+          (onSelect)="onZoneSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-2 dropdown-auto-width">
+          <angular2-multiselect [data]="dropdownStatusList"
+          formControlName="status"
+          [settings]="statusDropdownSettings"
+          (onSelect)="onStatusSelect($event)"
+          ></angular2-multiselect>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" formControlName="search" class="form-control" placeholder="Search Device MAC, Camera Name" />
+        </div>
+        <div class="col-sm-2">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="row mt-10">
+  <div class="offset-6 col-xs-6 col-md-6">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+        <th>Office</th>
+        <th>Zone</th>
+        <th>Device</th>
+        <th>Camera Name</th>
+        <th>Status</th>
+        <th>Days Remaining</th>
+        <th style="width: 165px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let camera of camerasList">
+        <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{camera.company.name}}</td>
+        <td>{{camera.office.name}}</td>
+        <td>{{camera.zone.name}}</td>
+        <td>{{camera.company_device.device.mac}}</td>
+        <td>{{camera.device_name}}</td>
+        <td>{{getStatus(camera)}}</td>
+        <td>{{expiresIn(camera)}}</td>
+        <td>
+          <a class="btn btn-info btn-sm" routerLink='/lifeguard/cameras/{{camera.id}}'>Show</a>&nbsp;
+          <a class="btn btn-primary btn-sm" routerLink='/lifeguard/cameras/{{camera.id}}/edit' *hasPermission="{permissions: ['Update Cameras']}">Edit</a>&nbsp;          
+          <button class="btn btn-danger btn-sm" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Cameras']}">Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{camera.device_name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteCamera(camera)">
+          </swal>
+          <span *hasPermission="{roles: ['Company User'], operator: 'exact'}">
+            <a class="btn btn-primary btn-sm" routerLink='/lifeguard/cameras/{{camera.id}}/update-name' *hasPermission="{permissions: ['Manage Camera']}">Change Name</a>
+          </span>
+        </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-12">
+    <ngb-pagination [collectionSize]="totalItems"
+     [(page)]="currentPage"
+     [maxSize]="5"
+     [pageSize]="pageSize"
+     (pageChange)="pageChanged($event)"
+     [disabled]="totalItems <= pageSize"
+     class="d-flex justify-content-end"
+     aria-label="Default pagination"></ngb-pagination>
+  </div>
+</div>

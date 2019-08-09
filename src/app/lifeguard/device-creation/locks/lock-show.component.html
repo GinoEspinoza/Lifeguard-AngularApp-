@@ -1,0 +1,81 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" *ngIf="lock !== undefined">
+        <div class="card-header">
+          <h3 class="card-title">Lock Details</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover table-bordered">
+            <tbody>
+              <tr>
+                <th style="width: 300px;">Lock Name</th>
+                <td><span *ngIf="lock.device_name">{{lock.device_name}}</span></td>
+              </tr>
+              <tr>
+                <th style="width: 300px;">Lock Type</th>
+                <td><span *ngIf="lock.device_name">{{getTypeString(lock.type)}}</span></td>
+              </tr>
+              <tr>
+                <th>IP</th>
+                <td>{{lock.ip}}</td>
+              </tr>
+              <tr>
+                <th>Model Name</th>
+                <td *ngIf="lock.company_device.device">{{lock.company_device.device.model_name}}</td>
+              </tr>
+              <tr>
+                <th>Series</th>
+                <td *ngIf="lock.company_device.device">{{lock.company_device.device.series}}</td>
+              </tr>
+              <tr>
+                <th>MAC</th>
+                <td *ngIf="lock.company_device.device">{{lock.company_device.device.mac}}</td>
+              </tr>
+              <tr>
+                <th>Vendor Serial Number</th>
+                <td *ngIf="lock.company_device.device">{{lock.company_device.device.vendor_serial_no}}</td>
+              </tr>
+              <tr>
+                <th>Part Number</th>
+                <td *ngIf="lock.company_device.device">{{lock.company_device.device.part_no}}</td>
+              </tr>
+              <tr>
+                <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+                <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{lock.company.name}}</td>
+              </tr>
+              <tr>
+                <th>Office Name</th>
+                <td *ngIf="lock.office">{{lock.office.name}}</td>
+              </tr>
+              <tr>
+                <th>Office Address</th>
+                <td *ngIf="lock.office">{{lock.office.address}}</td>
+              </tr>
+              <tr>
+                <th>Zone</th>
+                <td *ngIf="lock.zone">{{lock.zone.name}}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>
+                  <ui-switch [(ngModel)]="lock.status" (change)="setStatus($event)" labelOn="Active" labelOff="Inactive" size="large"></ui-switch>
+                </td>              
+              </tr>
+            </tbody>
+          </table>          
+        </div>
+        <div class="card-footer clearfix">
+          <a class="btn btn-primary" routerLink='/lifeguard/locks/{{lock.id}}/edit' *hasPermission="{permissions: ['Update Locks']}">Edit</a>&nbsp;
+          <button class="btn btn-danger" [swal]="deleteSwal" *hasPermission="{permissions: ['Delete Locks']}">Delete</button>
+          <swal
+            #deleteSwal
+            title="Are you sure you want to delete {{lock.device_name }}?"
+            type="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deleteLock(lock)">
+          </swal>
+        </div>
+    </div>
+  </div>
+</div>

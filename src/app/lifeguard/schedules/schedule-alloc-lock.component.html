@@ -1,0 +1,96 @@
+<div>
+	<div class="card">
+		<div class="card-header">
+			<h3 class="card-title">Schedule Details</h3>
+		</div>
+		<div class="card-body table-responsive p-0">
+			<table class="table table-hover table-bordered" *ngIf="schedule !== undefined">
+				<thead>
+					<th>Company Name</th>
+					<th>Schedule Name</th>
+					<th>Type</th>
+					<th *ngIf="schedule.type == 0">Week Days</th>
+					<th *ngIf="schedule.type == 0">Start Time</th>
+					<th *ngIf="schedule.type == 0">End Time</th>
+					<th *ngIf="schedule.type == 1">Start Day</th>
+					<th *ngIf="schedule.type == 1">End Day</th>
+					<th>Status</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{schedule.company.name}}</td>    
+						<td>{{schedule.name}}</td>
+						<td>{{schedule.type == 0 ? "Week" : "Day"}}</td>
+						<td *ngIf="schedule.type == 0" innerHtml="{{getWeekdayLabels(schedule.weekday)}}"></td>    
+						<td *ngIf="schedule.type == 0">{{schedule.start_time}}</td>    
+						<td *ngIf="schedule.type == 0">{{schedule.end_time}}</td>
+						<td *ngIf="schedule.type == 1">{{schedule.start_day}}</td>
+						<td *ngIf="schedule.type == 1">{{schedule.end_day}}</td>
+						<td>{{getStatus()}}</td>    
+					</tr>             
+				</tbody>
+			</table>          
+		</div>
+	</div>
+	<hr/>
+	<h2 align="center">Assign Schedule to Lock</h2><br>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label" for="dd-devusers">Type</label>
+		<div class="col-sm-10">
+			<div class="btn-group btn-group-toggle" ngbRadioGroup name="radioType" [(ngModel)] = "typeModel">
+				<label ngClass="btn-default" ngbButtonLabel *ngFor="let type of typeList">
+					<input type="radio" (click)="onItemSelectType(type)" ngbButton  [value]="type.id"><i class='fa fa-adn nav-icon'></i> {{ type.name }}
+				</label>
+			</div>
+			<div *ngIf="!selectedType || !selectedType.id" class="invalid-feedback">
+				<div *ngIf="!selectedType || !selectedType.id">Type is required.</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label">Locks</label>
+		<div class="col-sm-10">
+			<div class="btn-group btn-group-toggle" name="radio" >
+				<label  ngbButtonLabel *ngFor="let lock of locksDDList" class="device-lock btn-default">
+					<input type="checkbox" (click)="onSelectLock(lock)" ngbButton [(ngModel)] = "locksModel[lock.id]" [ngModelOptions]="{standalone: true}">
+					<i class='fa fa-hdd-o nav-icon'></i> {{ lock.name }}
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-sm-2 col-form-div"></div>
+		<div class="col-sm-10">
+			<button class="btn btn-primary" (click)="allocateToHub()" [disabled]="!selectedLocks || selectedLocks.length == 0">Allocate</button>
+		</div>
+	</div>
+	<hr/>
+	<table class="table table-hover table-bordered" *ngIf="schedule !== undefined">
+		<thead>
+			<th>Type</th>
+			<th>Assigned Devices</th>
+			<th>Action</th>
+		</thead>
+		<tbody>
+			<tr *ngIf="displayUsersLocks.length==0">
+				<td colspan='4'>No assigned users</td>
+			</tr>
+			<tr *ngFor="let ul of displayUsersLocks">
+				<td>{{ ul.type_name }}</td>
+				<td>{{ ul.locks }}</td>    
+				<td>
+					<button class="btn btn-info btn-sm" (click)="EditUserFromSchedule(ul)">Edit</button>&nbsp;
+					<button class="btn btn-danger btn-sm" [swal]="deleteSwal">Remove</button>
+					<swal
+						#deleteSwal
+						title="Are you sure you want to remove locks from the schedule?"
+						type="question"
+						[showCancelButton]="true"
+						[focusCancel]="true"
+						(confirm)="DeleteUserFromSchedule(ul)">
+					</swal>
+				</td>
+			</tr>             
+		</tbody>
+	</table>
+</div>

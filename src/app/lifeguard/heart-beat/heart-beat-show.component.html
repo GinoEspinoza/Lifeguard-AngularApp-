@@ -1,0 +1,35 @@
+<div class="span">
+  <header class="col-md-6">
+    <h3>List of Locks online</h3>
+  </header>
+</div>
+<div class="table-responsive p-0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Office</th>
+        <th>Zone</th>
+        <th>Lock Name</th>
+        <th>Channel Name</th>
+        <th>IP</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of locksList">
+        <td>{{item.office}}</td>
+        <td>{{item.zone}}</td>
+        <td>{{item.lockName}}</td>
+        <td>{{item.channel}}</td>
+        <td>{{item.ip}}</td>
+        <td>
+          <i class="fa fa-spin {{getStatusIcon(item)}} nav-icon"></i>
+          {{getLiveStatus(item)}}
+        </td>
+      </tr>
+      <tr *ngIf="locksList.length == 0">
+        <td colspan="6">Please wait while we process your data...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

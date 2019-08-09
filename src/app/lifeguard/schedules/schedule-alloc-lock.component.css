@@ -1,0 +1,25 @@
+
+.btn.btn-default:not(:disabled):not(.disabled):active, .btn.btn-default:not(:disabled):not(.disabled).active{
+    background-color:#17a2b8;
+    color:white;
+}
+.btn.btn-info:not(:disabled):not(.disabled):active, .btn.btn-info:not(:disabled):not(.disabled).active{
+    background: white;
+    color: #17a2b8;
+}
+.my-control.is-invalid ~ .invalid-feedback {
+	display: block
+}
+.my-control.is-invalid .selected-list[_ngcontent-c6] .c-btn[_ngcontent-c6]{
+	border-color: #dc3545!important;
+}
+.display-relations {
+	padding: 10px;
+}
+.display-relations label{
+	margin-right: 20px;
+	min-width: 200px;
+}
+.no-assigned label {
+	margin: 0 auto;
+}

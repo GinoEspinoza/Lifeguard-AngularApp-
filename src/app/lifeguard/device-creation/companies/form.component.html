@@ -1,0 +1,79 @@
+<div>
+  <h2 align="center" *ngIf="companyId!==undefined && companyId!==null">Edit Company </h2>
+  <h2 align="center" *ngIf="companyId === undefined">Add Company</h2><br>
+  <form [formGroup]="companyForm" form-inline (ngSubmit)="onSubmit()">
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">Name</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid':  f.name.dirty && f.name.hasError('required') }" placeholder="Name" />
+        <div *ngIf=" f.name.dirty && f.name.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.name.dirty && f.name.hasError('required')">Name is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">Channel Name</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="channelName" class="form-control lowercase" id="channelNameField" [ngClass]="{ 'is-invalid':  f.channelName.dirty && f.channelName.hasError('required') }" placeholder="Channel Name" />
+        <div *ngIf=" f.channelName.dirty && f.channelName.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.channelName.dirty && f.channelName.hasError('required')">Channel Name is required.</div>
+        </div>
+        <div>
+          <div *ngIf="f.channelName.dirty && f.channelName.hasError('pattern')" class="has-error">Invalid Channel Name.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="phone">Contact Number</label>
+      <div class="col-sm-10">
+        <input ng2TelInput
+         [ng2TelInputOptions]="{separateDialCode: true, initialCountry: 'us'}"
+         type="text"
+         formControlName="phone"
+         class="form-control"
+         (input)="numberChange($event)"
+         [ngClass]="{ 'is-invalid':  f.phone.dirty && (f.phone.hasError('required') || f.phone.hasError('invalid') || !phoneValid) }"
+         (hasError)="onPhoneInvalid($event)"
+         (intlTelInputObject)="telInputObject($event)"
+         (ng2TelOutput)="getNumber($event)" />
+        <div [ngClass]="{'d-block': f.phone.invalid || !phoneValid}" class="invalid-feedback">
+          <div *ngIf="f.phone.dirty && f.phone.hasError('required')">Contact Number is required.</div>
+          <div *ngIf="f.phone.hasError('invalid') || !phoneValid">Contact Number is invalid.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="email">Contact Email</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': f.email.dirty && (f.email.hasError('required') || f.email.hasError('pattern')) }" placeholder="Contact Email" />
+        <div *ngIf=" f.email.dirty && f.email.invalid" class="invalid-feedback">
+          <div *ngIf="f.email.dirty && f.email.hasError('required')">Contact Email is required.</div>
+          <div *ngIf="f.email.dirty && f.email.hasError('pattern')">Contact Email is invalid.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="billing_address">Billing Address</label>
+      <div class="col-sm-10">
+        <input type="text" formControlName="billing_address" class="form-control" [ngClass]="{ 'is-invalid':  f.billing_address.dirty && f.billing_address.hasError('required') }" placeholder="Billing Address" />
+        <div *ngIf=" f.billing_address.dirty && f.billing_address.hasError('required')" class="invalid-feedback">
+          <div *ngIf="f.billing_address.dirty && f.billing_address.hasError('required')">Billing Address is required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row" *ngIf="!companyId">
+      <label class="col-sm-2 col-form-label" for="billing_address">Add Default Office & Zone</label>
+      <div class="col-sm-10">
+        <input type="checkbox" formControlName="addDefaults" class="" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-2 col-form-div"></div>
+      <div class="col-sm-10">
+          <button [disabled]="companyForm.invalid || !phoneValid" class="btn btn-primary" *ngIf="companyId!==undefined && companyId!==null">Update</button>
+          <button [disabled]="companyForm.invalid || !phoneValid" class="btn btn-primary" *ngIf="companyId==undefined">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

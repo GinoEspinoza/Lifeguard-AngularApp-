@@ -1,0 +1,41 @@
+<div>
+  <h2 align="center" *ngIf="zoneId!==undefined && zoneId!==null">Edit Zone</h2>
+  <h2 align="center" *ngIf="zoneId === undefined">Add Zone</h2><br>
+  <div class="form-group row" *hasPermission="{roles: ['Super Admin', 'System Admin']}">
+      <label class="col-sm-2 col-form-label" for="name">Company</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems"
+        [settings]="companyDropdownSettings"
+        (onSelect)="onItemSelectCompany($event)"
+        (onDeSelect)="OnItemDeSelect($event)"
+        ></angular2-multiselect>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label" for="name">Office</label>
+      <div class="col-sm-10">
+        <angular2-multiselect [data]="officeDropdownList" [(ngModel)]="officeSelectedItems"
+        [settings]="officeDropdownSettings"
+        (onSelect)="onItemSelectOffice($event)"
+        (onDeSelect)="OnItemDeSelect($event)"></angular2-multiselect>
+      </div>
+    </div>
+  <form [formGroup]="zoneForm" form-inline (ngSubmit)="onSubmit(zoneForm.value)">
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="name">Name</label>
+        <div class="col-sm-10">
+            <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': f.name.dirty && f.name.hasError('required') }" placeholder="Name" />
+            <div *ngIf="f.name.dirty && f.name.hasError('required')" class="invalid-feedback">
+                <div *ngIf="f.name.dirty && f.name.hasError('required')">Name is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-2 col-form-div"></div>
+      <div class="col-sm-10">
+          <button [disabled]="isFormInvalid()" class="btn btn-primary" *ngIf="zoneId!==undefined && zoneId!==null">Update</button>
+          <button [disabled]="isFormInvalid()" class="btn btn-primary" *ngIf="zoneId==undefined">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

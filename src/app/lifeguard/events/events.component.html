@@ -1,0 +1,104 @@
+<div class="span">
+	<div class="row">
+	  <header class="col-md-6 col-xs-6">
+		<h3>List of Devices</h3>
+	  </header>
+	</div>
+  </div>
+  <form [formGroup]="searchForm" form-inline (ngSubmit)="onSearch(searchForm.value)">
+	<div class="row">
+	  <div class="col-xs-6 col-12">
+		<div class="row filters-wrapper">
+		  <div class="col-sm-2 dropdown-auto-width">
+			<angular2-multiselect [data]="dropdownCompanyList" [(ngModel)]="selectedCompanyItems"
+			formControlName="companyId"
+			[settings]="companyDropdownSettings"
+			(onSelect)="onCompanySelect($event)"
+			></angular2-multiselect>
+		  </div>
+		  <div class="col-sm-2 dropdown-auto-width">
+			<angular2-multiselect [data]="dropdownOfficeList" [(ngModel)]="selectedOfficeItems"
+			formControlName="officeId"
+			[settings]="officeDropdownSettings"
+			(onSelect)="onOfficeSelect($event)"
+			></angular2-multiselect>
+		  </div>
+		  <div class="col-sm-2 dropdown-auto-width">
+			<angular2-multiselect [data]="dropdownZoneList" [(ngModel)]="selectedZoneItems"
+			formControlName="zoneId"
+			[settings]="zoneDropdownSettings"
+			(onSelect)="onZoneSelect($event)"
+			></angular2-multiselect>
+		  </div>
+		  <div class="col-sm-2 dropdown-auto-width">
+			<angular2-multiselect [data]="dropdownStatusList"
+			formControlName="status"
+			[settings]="statusDropdownSettings"
+			(onSelect)="onStatusSelect($event)"
+			></angular2-multiselect>
+		  </div>
+		  <div class="col-sm-2">
+			<button class="btn btn-primary">Search</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </form>
+  <div class="row mt-10">
+	<div class="offset-6 col-xs-6 col-md-6">
+	  <ngb-pagination [collectionSize]="totalItems"
+	   [(page)]="currentPage"
+	   [maxSize]="5"
+	   [pageSize]="pageSize"
+	   (pageChange)="pageChanged($event)"
+	   [disabled]="totalItems <= pageSize"
+	   class="d-flex justify-content-end"
+	   aria-label="Default pagination"></ngb-pagination>
+	</div>
+  </div>
+  <div class="table-responsive p-0">
+	<table class="table table-hover table-bordered">
+	  <thead>
+		<tr>
+		  <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+		  <th>Office</th>
+		  <th>Zone</th>
+		  <th>Device</th>
+		  <th>IP</th>
+		  <th>Lock Name</th>
+		  <!-- <th>Status</th> -->
+		  <!-- <th>Live Status</th> -->
+		  <th style="width: 155px;">Actions</th>
+		</tr>
+	  </thead>
+	  <tbody>
+		<tr *ngFor="let lock of locksList">
+		  <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{lock.company.name}}</td>
+		  <td>{{lock.office.name}}</td>
+		  <td>{{lock.zone.name}}</td>
+		  <td>{{lock.company_device.device.mac}}</td>
+		  <td>{{lock.ip}}</td>
+		  <td>{{lock.device_name}}</td>
+		  <!-- <td>{{getStatus(lock)}}</td> -->
+		  <!-- <td><i class="fa fa-spin {{getStatusIcon(lock)}} nav-icon"></i></td> -->
+		  <td>
+			<a class="btn btn-info btn-sm" routerLink='/lifeguard/events/{{lock.id}}'>Show Events</a>&nbsp;
+			<a class="btn btn-primary btn-sm" routerLink='/lifeguard/events/{{lock.id}}/watch'>Watch Events</a>
+		  </td>
+	  </tr>
+	  </tbody>
+	</table>
+  </div>
+  <div class="row">
+	<div class="col-xs-12 col-12">
+	  <ngb-pagination [collectionSize]="totalItems"
+	   [(page)]="currentPage"
+	   [maxSize]="5"
+	   [pageSize]="pageSize"
+	   (pageChange)="pageChanged($event)"
+	   [disabled]="totalItems <= pageSize"
+	   class="d-flex justify-content-end"
+	   aria-label="Default pagination"></ngb-pagination>
+	</div>
+  </div>
+  

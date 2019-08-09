@@ -1,0 +1,28 @@
+<div>
+  <h2>Contact Us</h2>
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit(contactForm.value)">
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="subject">Subject</label>
+      <div class="col-sm-9">
+        <input type="test" formControlName="subject" class="form-control" placeholder="Enter subject" />
+        <div *ngIf="(f.subject.dirty || submitted) && f.subject.hasError('required')" class="has-error">Subject is required</div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="message">Message</label>
+      <div class="col-sm-9">
+        <textarea formControlName="message" class="form-control"  placeholder="Enter message"></textarea>
+        <div>
+          <div *ngIf="(f.message.dirty || submitted) && f.message.hasError('required')" class="has-error">Message is required</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-sm-3 col-form-div"></div>
+      <div class="col-sm-9">
+        <button class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </form>
+</div>

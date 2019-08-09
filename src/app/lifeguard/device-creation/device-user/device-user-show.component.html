@@ -1,0 +1,185 @@
+<ng-template #modal_content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Select Schedule</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <div class="row mt-10">
+        <div class="offset-6 col-xs-6 col-6">
+          <ngb-pagination [collectionSize]="totalItems"
+            [(page)]="currentPage"
+            [maxSize]="5"
+            [pageSize]="pageSize"
+            (pageChange)="pageChanged($event)"
+            [disabled]="totalItems <= pageSize"
+            class="d-flex justify-content-end"
+            aria-label="Default pagination"></ngb-pagination>
+        </div>
+      </div>
+      <div class="table-responsive p-0">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Week Days</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let schedule of schedules">
+              <td><input type='radio' name='schedule' (change)="setSchedule(schedule)"></td>
+              <td>{{schedule.name}}</td>
+              <td innerHTML="{{getWeekdayLabels(schedule.weekday)}}">
+              </td>
+              <td>{{schedule.start_time}}</td>
+              <td>{{schedule.end_time}}</td>
+              <td>{{getStatus(schedule)}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-12">
+          <ngb-pagination [collectionSize]="totalItems"
+            [(page)]="currentPage"
+            [maxSize]="5"
+            [pageSize]="pageSize"
+            (pageChange)="pageChanged($event)"
+            [disabled]="totalItems <= pageSize"
+            class="d-flex justify-content-end"
+            aria-label="Default pagination"></ngb-pagination>
+        </div>
+      </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="selectSchedule(modal)">Select</button>
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" *ngIf="deviceUser !== undefined">
+        <div class="card-header">
+          <h3 class="card-title">Device User Details</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover table-bordered">
+            <tbody>
+              <tr>
+                <th style="width: 300px;">Device User Id</th>
+                <td>{{deviceUser.device_user_id}}</td>
+              </tr>
+              <tr>
+                <th>Ref Device User Id</th>
+                <td>{{deviceUser.ref_device_user_id}}</td>
+              </tr>
+              <tr>
+                <th>Device User Name</th>
+                <td>{{deviceUser.device_user_fname}} {{deviceUser.device_user_lname}}</td>
+              </tr>
+              <tr>
+                <th>User Groups</th>
+                <td>{{deviceUser.group_names}}</td>
+              </tr>
+              <tr>
+                <th>Pin</th>
+                <td>{{deviceUser.pin}}</td>
+              </tr>
+              <tr>
+                <th>Status</th>
+                <td>{{deviceUser.status == '1' ? 'Active' : 'Inactive'}}</td>              
+              </tr>              
+            </tbody>
+          </table>          
+        </div>
+    </div>
+  </div>
+</div>
+<div class="table-responsive p-0" *ngIf="deviceUser !== undefined">
+  <table class="table table-bordered">
+    <thead>
+        <th *hasPermission="{roles: ['Super Admin', 'System Admin']}">Company</th>
+        <th>Office</th>
+        <th>Zone</th>
+        <th>Schedule</th>
+        <th>Lock Name</th>
+        <th>Lock Enrolled</th>
+        <th>Actions</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let lock of deviceUser.locks">
+          <td *hasPermission="{roles: ['Super Admin', 'System Admin']}">{{lock.company.name}}</td>
+          <td>{{lock.office.name}}</td>
+          <td>{{lock.zone.name}}</td>
+          <td>{{lock.schedule.name}}</td>
+          <td>{{lock.device_name}}</td>
+          <td>{{lock.enrolled ? 'Yes' : 'No'}}</td>
+          <td>
+            <a class="btn btn-primary btn-sm" routerLink='/lifeguard/device-users/{{deviceUser.id}}/edit'
+            *hasPermission="{permissions: ['Update Device Users']}">Edit</a>&nbsp;
+            <a class="btn btn-primary btn-sm" routerLink='/lifeguard/device-users/{{deviceUser.id}}/enroll'
+            *hasPermission="{permissions: ['Enroll Device Users']}">Enroll</a>&nbsp;
+            <span *ngIf="lock.enrolled">
+              <button class="btn btn-primary btn-sm"
+              *hasPermission="{permissions: ['Update Device Users']}" [swal]="shareCredentialsSwal">Share Credentials</button>&nbsp;
+              <swal
+                #shareCredentialsSwal
+                title="Are you sure you want to share the card credential to all the locks?"
+                type="question"
+                [showCancelButton]="true"
+                [focusCancel]="true"
+                (confirm)="shareCredentials(lock)">
+              </swal>
+            </span>
+            <button class="btn btn-primary btn-sm" (click)="openScheduleModel(modal_content,lock)"
+            *hasPermission="{permissions: ['Update Device Users']}">Set Schedule</button>&nbsp;            
+            <a class="btn btn-danger btn-sm" *hasPermission="{permissions: ['Delete Device Users']}" [swal]="deleteSwal" >Delete</a>&nbsp;
+            <swal
+              #deleteSwal
+              title="Are you sure you want to delete {{ lock.device_name }}?"
+              type="question"
+              [showCancelButton]="true"
+              [focusCancel]="true"
+              (confirm)="deleteDeviceUser(deviceUser, lock)">
+            </swal>
+            <span *ngIf="lock.schedule.id">
+              <a class="btn btn-danger btn-sm"
+              *hasPermission="{permissions: ['Update Device Users']}" [swal]="deleteScheduleSwal">Delete Schedule</a>&nbsp;
+              <swal
+                #deleteScheduleSwal
+                title="Are you sure you want to delete the schedule from the lock?"
+                type="question"
+                [showCancelButton]="true"
+                [focusCancel]="true"
+                (confirm)="deleteSchedule(lock.schedule, lock)">
+              </swal>
+            </span>
+            <span *ngIf="lock.enrolled">
+              <a class="btn btn-danger btn-sm"
+              *hasPermission="{permissions: ['Delete Device Users']}" [swal]="deleteCredSwal" >Delete Credentials</a>
+              <swal
+                #deleteCredSwal
+                title="Are you sure you want to delete credentials of {{ lock.device_name }}?"
+                type="question"
+                [showCancelButton]="true"
+                [focusCancel]="true"
+                (confirm)="deleteUserCredentials(deviceUser, lock)">
+              </swal>
+            </span>
+            </td>
+        </tr>
+        <tr *ngIf="!deviceUser.locks[0]">
+          <td colspan="7">
+            No locks assigned.
+            <a class="btn btn-primary btn-sm" routerLink='/lifeguard/device-users/{{deviceUser.id}}/edit'
+            *hasPermission="{permissions: ['Update Device Users']}">Assign Now</a>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+</div>
